@@ -5,8 +5,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
+      path: '/homepage',
+      name: 'homepage',
       component: HomeView
     },
     {
@@ -15,18 +15,18 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/signin',
-      name: 'signin',
+      path: '/sign-in',
+      name: 'sign-in',
       component: () => import('../views/SignInView.vue')
     },
     {
       path: '/forgot-password',
-      name: 'forgotpassword',
+      name: 'forgot-password',
       component: () => import('../views/SignUpView.vue')
     },
     {
       path: '/sign-up',
-      name: 'signup',
+      name: 'sign-up',
       component: () => import('../views/SignUpView.vue')
     }
   ]

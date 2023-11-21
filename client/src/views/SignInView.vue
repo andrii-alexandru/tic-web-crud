@@ -5,7 +5,7 @@ import DefaultLayout from '../components/DefaultLayout.vue'
 <template>
   <DefaultLayout>
     <transition appear name="el-fade-in-linear">
-      <div class="login-container">
+      <div class="login-container main-container-pattern">
         <el-card shadow="hover" class="login-card" :body-style="{ padding: '40px' }">
           <div class="login-logo">
             <svg
@@ -49,6 +49,8 @@ import DefaultLayout from '../components/DefaultLayout.vue'
               ></path>
             </svg>
           </div>
+
+          <h2 class="title">Sign In</h2>
 
           <el-form :model="loginForm" :rules="loginRules">
             <el-form-item prop="username">
@@ -113,6 +115,13 @@ const login = () => {
 </script>
 
 <style scoped>
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 20px 0px;
+  color: var(--el-color-primary-light-3);
+  text-transform: uppercase;
+}
 .login-container {
   display: flex;
   justify-content: center;
@@ -124,8 +133,27 @@ const login = () => {
   width: 400px;
   text-align: center;
 }
+.main-container-pattern {
+  width: 100%;
+  height: 100%;
+  background: repeating-radial-gradient(
+    circle at 50%,
+    rgb(26, 133, 233),
+    rgb(104, 183, 230) 1em,
+    white 1em,
+    white 2em
+  );
+}
 
-.login-logo {
-  margin-bottom: 50px;
+.dark .main-container-pattern {
+  width: 100%;
+  height: 100%;
+  background: repeating-radial-gradient(
+    circle at 50%,
+    black,
+    black 1em,
+    rgb(26, 133, 233) 1em,
+    rgb(26, 133, 233) 2em
+  );
 }
 </style>

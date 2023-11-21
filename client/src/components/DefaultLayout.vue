@@ -61,14 +61,14 @@
     <el-container>
       <el-header style="text-align: right; font-size: 12px">
         <div class="toolbar">
-          <ThemeModeSwitch />
+          <Thememodeswitch />
 
           &nbsp; &nbsp; &nbsp;
           <el-dropdown>
             <el-icon style="margin-right: 8px; margin-top: 1px"><setting /></el-icon>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item><RouterLink to="/signin">Sign in</RouterLink></el-dropdown-item>
+                <el-dropdown-item><RouterLink to="/sign-in">Sign in</RouterLink></el-dropdown-item>
                 <el-dropdown-item>Add</el-dropdown-item>
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
@@ -78,7 +78,7 @@
         </div>
       </el-header>
 
-      <el-main class="main-container-pattern">
+      <el-main>
         <slot></slot>
       </el-main>
     </el-container>
@@ -87,7 +87,7 @@
 
 <script setup>
 import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
-import ThemeModeSwitch from '../components/defaultLayout/ThemeModeSwitch.vue'
+import Thememodeswitch from './defaultLayout/ThemeModeSwitch.vue'
 </script>
 
 <style scoped>
@@ -115,29 +115,5 @@ import ThemeModeSwitch from '../components/defaultLayout/ThemeModeSwitch.vue'
   justify-content: center;
   height: 100%;
   right: 20px;
-}
-
-.main-container-pattern {
-  width: 100%;
-  height: 100%;
-  background: repeating-radial-gradient(
-    circle at 50%,
-    rgb(26, 133, 233),
-    rgb(104, 183, 230) 1em,
-    white 1em,
-    white 2em
-  );
-}
-
-.dark .main-container-pattern {
-  width: 100%;
-  height: 100%;
-  background: repeating-radial-gradient(
-    circle at 50%,
-    black,
-    black 1em,
-    rgb(26, 133, 233) 1em,
-    rgb(26, 133, 233) 2em
-  );
 }
 </style>
