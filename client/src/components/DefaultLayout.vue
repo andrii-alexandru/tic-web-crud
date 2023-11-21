@@ -68,7 +68,7 @@
             <el-icon style="margin-right: 8px; margin-top: 1px"><setting /></el-icon>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item><RouterLink to="/sign-in">Sign in</RouterLink></el-dropdown-item>
+                <el-dropdown-item><RouterLink to="/login">Login</RouterLink></el-dropdown-item>
                 <el-dropdown-item>Add</el-dropdown-item>
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>

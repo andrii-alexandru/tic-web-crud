@@ -32,8 +32,8 @@
           <RouterLink to="/forgot-password">
             <el-link type="danger" :icon="Edit">Forgot Password?</el-link>
           </RouterLink>
-          <RouterLink to="/sign-in">
-            <el-link type="primary">Sign In</el-link>
+          <RouterLink to="/login">
+            <el-link type="primary">Login</el-link>
           </RouterLink>
         </el-row>
       </el-card>
@@ -46,7 +46,7 @@ import AppLogo from '../components/AppLogo.vue';
 import DefaultLayout from '../components/DefaultLayout.vue';
 
 export default {
-  name: 'SignupView',
+  name: 'RegisterView',
   components: {
     AppLogo,
     DefaultLayout,
