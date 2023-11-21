@@ -85,9 +85,18 @@
   </el-container>
 </template>
 
-<script setup>
+<script>
 import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
 import Thememodeswitch from './defaultLayout/ThemeModeSwitch.vue'
+
+export default{
+  name: "DefaultLayout",
+  components:{
+    Thememodeswitch
+  }
+}
+
+
 </script>
 
 <style scoped>

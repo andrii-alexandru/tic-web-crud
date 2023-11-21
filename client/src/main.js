@@ -9,7 +9,6 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 
 import App from './App.vue'
 import router from './router'
-import { RouterLink } from 'vue-router'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
@@ -35,7 +34,7 @@ app.use(ElementPlus)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-app.component('RouterLink', RouterLink)
+
 app.use(router)
 
 app.mount('#app')

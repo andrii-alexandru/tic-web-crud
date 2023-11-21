@@ -1,7 +1,3 @@
-<script setup>
-import DefaultLayout from '../components/DefaultLayout.vue'
-</script>
-
 <template>
   <DefaultLayout>
     <transition appear name="el-fade-in-linear">
