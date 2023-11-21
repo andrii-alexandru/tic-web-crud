@@ -1,29 +1,65 @@
 <template>
   <DefaultLayout>
     <div class="login-container main-container-pattern">
-      <el-card shadow="hover" class="login-card" >
+      <el-card shadow="hover" class="login-card">
         <AppLogo></AppLogo>
-        <h2 class="title">Sign Up</h2>
-        <el-form :model="loginForm" :rules="loginRules" label-position="left">
+        <h2 class="title">Register</h2>
+        <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
           <el-form-item prop="username" label="Username" label-width="150px">
-            <el-input v-model="loginForm.username" prefix-icon="user" placeholder="Username" size="large"></el-input>
+            <el-input
+              v-model="loginData.username"
+              prefix-icon="user"
+              placeholder="Username"
+              size="large"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="email" label="Email" rules="email" label-width="150px">
-            <el-input v-model="loginForm.email" prefix-icon="message" placeholder="Email" size="large"></el-input>
+            <el-input
+              v-model="loginData.email"
+              prefix-icon="message"
+              placeholder="Email"
+              size="large"
+            ></el-input>
           </el-form-item>
-          <el-form-item prop="password" label="Password" rules="required|password" label-width="150px">
-            <el-input type="password" v-model="loginForm.password" prefix-icon="lock" placeholder="Password" size="large"
-              show-password></el-input>
+          <el-form-item
+            prop="password"
+            label="Password"
+            rules="required|password"
+            label-width="150px"
+          >
+            <el-input
+              type="password"
+              v-model="loginData.password"
+              prefix-icon="lock"
+              placeholder="Password"
+              size="large"
+              show-password
+            ></el-input>
           </el-form-item>
-          <el-form-item prop="checkPassword" label="Confirm Password" rules="required|confirmed:password" label-width="150px">
-            <el-input type="password" v-model="loginForm.checkPassword" prefix-icon="lock" placeholder="Confirm Password"
-              size="large" show-password></el-input>
+          <el-form-item
+            prop="checkPassword"
+            label="Confirm Password"
+            rules="required|confirmed:password"
+            label-width="150px"
+          >
+            <el-input
+              type="password"
+              v-model="loginData.checkPassword"
+              prefix-icon="lock"
+              placeholder="Confirm Password"
+              size="large"
+              show-password
+            ></el-input>
           </el-form-item>
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" class="login-button" @click="register(loginForm)" size="large"
-                round>Register</el-button>
+              <el-button type="primary" class="login-button" @click="register" size="large"
+                >Register</el-button
+              >
+              <el-button class="login-button" @click="register" size="large" round plain>
+                <img src="../assets/images/google.svg" alt="google logo" class="svg_google_image" />
+              </el-button>
             </el-form-item>
           </el-row>
         </el-form>
@@ -41,94 +77,80 @@
   </DefaultLayout>
 </template>
 
-<script>
-import AppLogo from '../components/AppLogo.vue';
-import DefaultLayout from '../components/DefaultLayout.vue';
+<script setup>
+import AppLogo from '../components/AppLogo.vue'
+import DefaultLayout from '../components/DefaultLayout.vue'
+import { ref } from 'vue'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'RegisterView',
-  components: {
-    AppLogo,
-    DefaultLayout,
-  },
-  data() {
-    return {
-      loginForm: {
-        username: '',
-        email: '',
-        password: '',
-        checkPassword: '',
-      },
-      loginRules: {
-        username: [{ required: true, message: 'Please enter your username', trigger: 'blur' }],
-        email: [{ required: true, message: 'Please enter your email', trigger: 'blur' }, { type: 'email', message: 'Please enter a valid email address', trigger: ['blur', 'change'] }],
-        password: [
-          { required: true, message: 'Please enter your password', trigger: 'blur' },
-          { min: 6, message: 'Password length should be at least 6 characters', trigger: 'blur' },
-        ],
-        checkPassword: [
-          { required: true, message: 'Please confirm your password', trigger: 'blur' },
-          { validator: this.validatePasswordConfirmation, trigger: 'blur' },
-        ],
-      },
-    };
-  },
-  methods: {
-    validatePasswordConfirmation(rule, value, callback) {
-      if (value === this.loginForm.password) {
-        callback();
-      } else {
-        callback(new Error('Passwords do not match'));
-      }
-    },
-    register(formData) {
-      // Implement your registration logic here
-      console.log('Registration data:', formData);
-    },
-  },
-};
+const router = useRouter()
+
+const loginData = ref({
+  username: '',
+  email: '',
+  password: '',
+  checkPassword: ''
+})
+
+const loginForm = ref(null)
+
+const validatePasswordConfirmation = (rule, value, callback) => {
+  if (value === loginData.value.password) {
+    callback()
+  } else {
+    callback(new Error('Passwords do not match'))
+  }
+}
+
+const loginRules = {
+  username: [{ required: true, message: 'Please enter your username', trigger: 'blur' }],
+  email: [
+    { required: true, message: 'Please enter your email', trigger: 'blur' },
+    {
+      type: 'email',
+      message: 'Please enter a valid email address',
+      trigger: ['blur', 'change']
+    }
+  ],
+  password: [
+    { required: true, message: 'Please enter your password', trigger: 'blur' },
+    { min: 6, message: 'Password length should be at least 6 characters', trigger: 'blur' }
+  ],
+  checkPassword: [
+    { required: true, message: 'Please confirm your password', trigger: 'blur' },
+    { validator: validatePasswordConfirmation, trigger: 'blur' }
+  ]
+}
+
+const register = () => {
+  loginForm.value.validate(async (valid) => {
+    let email = loginData.value.email
+    let password = loginData.value.password
+    if (valid) {
+      const auth = getAuth()
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          ElMessage({
+            type: 'success',
+            message: 'Registration succesful!'
+          })
+          router.push('/homepage')
+        })
+        .catch((error) => {
+          ElMessage({
+            type: 'error',
+            message: error.message
+          })
+        })
+    }
+  })
+}
 </script>
 
-
 <style scoped>
-.title {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 20px 0px;
-  color: var(--el-color-primary-light-3);
-  text-transform: uppercase;
-}
-
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.login-card {
-  width: 800px;
-  text-align: center;
-  padding: 100px;
-}
-
-.main-container-pattern {
-  width: 100%;
-  height: 100%;
-  background: repeating-radial-gradient(circle at 50%,
-      rgb(26, 133, 233),
-      rgb(104, 183, 230) 1em,
-      white 1em,
-      white 2em);
-}
-
-.dark .main-container-pattern {
-  width: 100%;
-  height: 100%;
-  background: repeating-radial-gradient(circle at 50%,
-      black,
-      black 1em,
-      rgb(26, 133, 233) 1em,
-      rgb(26, 133, 233) 2em);
+.svg_google_image {
+  height: 20px;
 }
 </style>
