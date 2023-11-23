@@ -1,7 +1,7 @@
 <template>
   <el-container class="layout-container-demo">
     <el-drawer v-model="aside_visible" :show-close="true" direction="ltr">
-      <el-aside>
+      <el-aside width="auto">
         <el-scrollbar>
           <el-menu :default-openeds="['1', '3']">
             <el-sub-menu index="1">
@@ -9,8 +9,10 @@
                 <el-icon><message /></el-icon>Navigator One
               </template>
               <el-menu-item-group>
-                <template #title>Group 1</template>
-                <el-menu-item index="1-1">Option 1</el-menu-item>
+                <template #title>Users</template>
+                <el-menu-item index="1-1">
+                  <RouterLink to="/get-all-users">See all users</RouterLink>
+                </el-menu-item>
                 <el-menu-item index="1-2">Option 2</el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group title="Group 2">
