@@ -6,12 +6,17 @@
           <el-menu :default-openeds="['1', '3']">
             <el-sub-menu index="1">
               <template #title>
-                <el-icon><message /></el-icon>Navigator One
+                <el-icon>
+                  <user />
+                </el-icon>USER
               </template>
               <el-menu-item-group>
-                <template #title>Users</template>
+                <template #title>User data section</template>
                 <el-menu-item index="1-1">
                   <RouterLink to="/my-account">My Account</RouterLink>
+                </el-menu-item>
+                <el-menu-item index="1-2" @click="logout">
+                  Log out
                 </el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group title="Group 2">
@@ -41,7 +46,9 @@
             </el-sub-menu>
             <el-sub-menu index="3">
               <template #title>
-                <el-icon><setting /></el-icon>Navigator Three
+                <el-icon>
+                  <setting />
+                </el-icon>Navigator Three
               </template>
               <el-menu-item-group>
                 <template #title>Group 1</template>
@@ -63,14 +70,10 @@
     <el-container>
       <el-header>
         <el-row justify="space-between" align="middle" style="height: 100%">
-          <el-button
-            type="primary"
-            plain
-            style="margin-left: 16px"
-            @click="aside_visible = true"
-            round
-          >
-            <el-icon><Expand /></el-icon>
+          <el-button type="primary" plain style="margin-left: 16px" @click="aside_visible = true" round>
+            <el-icon>
+              <Expand />
+            </el-icon>
           </el-button>
           <!-- <el-dropdown>
             <el-icon size="40"><CaretBottom /></el-icon>
@@ -96,26 +99,51 @@
 <script setup>
 import { ref } from 'vue'
 import Thememodeswitch from './ThemeModeSwitch.vue'
+import { getAuth, signOut } from "firebase/auth";
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus';
+
+const router = useRouter()
 
 const aside_visible = ref(false)
+
+const logout = function () {
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    ElMessage({
+      message: 'Congrats, you logged in.',
+      type: 'success'
+    })
+    router.push('/login')
+  }).catch((error) => {
+    ElMessage({
+      type: 'error',
+      message: error.message
+    })
+  });
+}
 </script>
 
 <style scoped>
 .layout-container-demo {
   height: 100vh;
 }
+
 .layout-container-demo .el-header {
   position: relative;
   background-color: var(--el-color-primary-light-9);
   color: var(--el-text-color-primary);
 }
+
 .layout-container-demo .el-aside {
   color: var(--el-text-color-primary);
   background: var(--el-color-primary-light-7);
 }
+
 .layout-container-demo .el-menu {
   border-right: none;
 }
+
 .layout-container-demo .el-main {
   padding: 0;
 }

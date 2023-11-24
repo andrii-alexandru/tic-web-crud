@@ -1,6 +1,6 @@
 <script setup>
 import AppLogo from '../components/AppLogo.vue'
-import DefaultLayout from '../components/DefaultLayout.vue'
+import DefaultLayout from '../components/default_layout.vue'
 </script>
 
 <template>

@@ -5,14 +5,6 @@
         <AppLogo></AppLogo>
         <h2 class="title">Register</h2>
         <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
-          <el-form-item prop="username" label="Username" label-width="150px">
-            <el-input
-              v-model="loginData.username"
-              prefix-icon="user"
-              placeholder="Username"
-              size="large"
-            ></el-input>
-          </el-form-item>
           <el-form-item prop="email" label="Email" rules="email" label-width="150px">
             <el-input
               v-model="loginData.email"
@@ -88,7 +80,6 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const loginData = ref({
-  username: '',
   email: '',
   password: '',
   checkPassword: ''
@@ -105,7 +96,6 @@ const validatePasswordConfirmation = (rule, value, callback) => {
 }
 
 const loginRules = {
-  username: [{ required: true, message: 'Please enter your username', trigger: 'blur' }],
   email: [
     { required: true, message: 'Please enter your email', trigger: 'blur' },
     {
