@@ -1,6 +1,6 @@
 <template>
   <el-container class="layout-container-demo">
-    <el-drawer v-model="aside_visible" :show-close="true" direction="ltr">
+    <el-drawer v-model="aside_visible" :show-close="true" direction="ltr" size="auto">
       <el-aside width="auto">
         <el-scrollbar>
           <el-menu :default-openeds="['1', '3']">
@@ -11,9 +11,8 @@
               <el-menu-item-group>
                 <template #title>Users</template>
                 <el-menu-item index="1-1">
-                  <RouterLink to="/get-all-users">See all users</RouterLink>
+                  <RouterLink to="/my-account">My Account</RouterLink>
                 </el-menu-item>
-                <el-menu-item index="1-2">Option 2</el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group title="Group 2">
                 <el-menu-item index="1-3">Option 3</el-menu-item>
@@ -73,7 +72,7 @@
           >
             <el-icon><Expand /></el-icon>
           </el-button>
-          <el-dropdown>
+          <!-- <el-dropdown>
             <el-icon size="40"><CaretBottom /></el-icon>
             <template #dropdown>
               <el-dropdown-menu>
@@ -82,7 +81,7 @@
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
             </template>
-          </el-dropdown>
+          </el-dropdown> -->
           <Thememodeswitch />
         </el-row>
       </el-header>

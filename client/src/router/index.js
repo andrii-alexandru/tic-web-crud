@@ -30,9 +30,9 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue')
     },
     {
-      path: '/get-all-users',
-      name: 'get-all-users',
-      component: () => import('../views/GetAllUsersView.vue')
+      path: '/my-account',
+      name: 'my-account',
+      component: () => import('../views/MyAccountView.vue')
     }
   ]
 })
