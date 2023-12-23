@@ -5,7 +5,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/homepage',
+      path: '/',
       name: 'homepage',
       component: HomeView
     },
@@ -33,6 +33,22 @@ const router = createRouter({
       path: '/my-account',
       name: 'my-account',
       component: () => import('../views/MyAccountView.vue')
+    },
+    {
+      path: '/quotes',
+      name: 'quotes',
+      component: () => import('../views/AllQuotes.vue')
+    },
+    {
+      path: '/create-quote',
+      name: 'create-quote',
+      component: () => import('../views/CreateQuote.vue')
+    },
+    // Wildcard route for 404
+    {
+      path: '/:catchAll(.*)',
+      name: 'not-found',
+      component: () => import('../views/NotFoundView.vue')
     }
   ]
 })

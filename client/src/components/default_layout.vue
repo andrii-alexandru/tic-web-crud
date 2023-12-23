@@ -1,67 +1,38 @@
 <template>
   <el-container class="layout-container-demo">
     <el-drawer v-model="aside_visible" :show-close="true" direction="ltr" size="auto">
-      <el-aside width="auto">
+      <el-aside width="50vw">
         <el-scrollbar>
-          <el-menu :default-openeds="['1', '3']">
+          <el-menu :default-openeds="['2']">
             <el-sub-menu index="1">
               <template #title>
-                <el-icon>
-                  <user />
-                </el-icon>USER
+                <el-icon> <user /> </el-icon>USER
               </template>
               <el-menu-item-group>
                 <template #title>User data section</template>
-                <el-menu-item index="1-1">
-                  <RouterLink to="/my-account">My Account</RouterLink>
+                <el-menu-item index="1-1" @click="redirectTo('/my-account')">
+                  My Account
                 </el-menu-item>
-                <el-menu-item index="1-2" @click="logout">
-                  Log out
+                <el-menu-item index="1-2" @click="logout"> Log out </el-menu-item>
+              </el-menu-item-group>
+              <el-menu-item-group>
+                <template #title>App interaction</template>
+                <el-menu-item index="1-3" @click="redirectTo('/favorites')">
+                  Favorites
                 </el-menu-item>
               </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="1-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-sub-menu index="1-4">
-                <template #title>Option4</template>
-                <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
-              </el-sub-menu>
             </el-sub-menu>
             <el-sub-menu index="2">
               <template #title>
-                <el-icon><icon-menu /></el-icon>Navigator Two
+                <el-icon><Collection /></el-icon>Quotes
               </template>
               <el-menu-item-group>
-                <template #title>Group 1</template>
-                <el-menu-item index="2-1">Option 1</el-menu-item>
-                <el-menu-item index="2-2">Option 2</el-menu-item>
+                <template #title></template>
+                <el-menu-item index="2-1" @click="redirectTo('/quotes')"> All quotes </el-menu-item>
+                <el-menu-item index="2-2" @click="redirectTo('/create-quote')">
+                  Create quote
+                </el-menu-item>
               </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="2-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-sub-menu index="2-4">
-                <template #title>Option 4</template>
-                <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
-              </el-sub-menu>
-            </el-sub-menu>
-            <el-sub-menu index="3">
-              <template #title>
-                <el-icon>
-                  <setting />
-                </el-icon>Navigator Three
-              </template>
-              <el-menu-item-group>
-                <template #title>Group 1</template>
-                <el-menu-item index="3-1">Option 1</el-menu-item>
-                <el-menu-item index="3-2">Option 2</el-menu-item>
-              </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="3-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-sub-menu index="3-4">
-                <template #title>Option 4</template>
-                <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
-              </el-sub-menu>
             </el-sub-menu>
           </el-menu>
         </el-scrollbar>
@@ -70,7 +41,13 @@
     <el-container>
       <el-header>
         <el-row justify="space-between" align="middle" style="height: 100%">
-          <el-button type="primary" plain style="margin-left: 16px" @click="aside_visible = true" round>
+          <el-button
+            type="primary"
+            plain
+            style="margin-left: 16px"
+            @click="aside_visible = true"
+            round
+          >
             <el-icon>
               <Expand />
             </el-icon>
@@ -99,28 +76,34 @@
 <script setup>
 import { ref } from 'vue'
 import Thememodeswitch from './ThemeModeSwitch.vue'
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 
 const aside_visible = ref(false)
 
 const logout = function () {
-  const auth = getAuth();
-  signOut(auth).then(() => {
-    ElMessage({
-      message: 'Congrats, you logged in.',
-      type: 'success'
+  const auth = getAuth()
+  signOut(auth)
+    .then(() => {
+      ElMessage({
+        message: 'Congrats, you logged in.',
+        type: 'success'
+      })
+      router.push('/login')
     })
-    router.push('/login')
-  }).catch((error) => {
-    ElMessage({
-      type: 'error',
-      message: error.message
+    .catch((error) => {
+      ElMessage({
+        type: 'error',
+        message: error.message
+      })
     })
-  });
+}
+
+const redirectTo = function (path) {
+  router.push(path)
 }
 </script>
 

@@ -1,8 +1,8 @@
 <template>
-  <DefaultLayout>
-    <div class="login-container main-container-pattern">
-      <el-card shadow="hover" class="login-card">
-        <AppLogo></AppLogo>
+  <default_layout>
+    <div class="login-container">
+      <el-card shadow="always" class="login-card">
+        <app_logo></app_logo>
         <h2 class="title">Register</h2>
         <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
           <el-form-item prop="email" label="Email" rules="email" label-width="150px">
@@ -66,12 +66,12 @@
         </el-row>
       </el-card>
     </div>
-  </DefaultLayout>
+  </default_layout>
 </template>
 
 <script setup>
-import AppLogo from '../components/AppLogo.vue'
-import DefaultLayout from '../components/DefaultLayout.vue'
+import app_logo from '../components/app_logo.vue'
+import default_layout from '../components/default_layout.vue'
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { ElMessage } from 'element-plus'
@@ -126,7 +126,7 @@ const register = () => {
             type: 'success',
             message: 'Registration succesful!'
           })
-          router.push('/homepage')
+          router.push('/')
         })
         .catch((error) => {
           ElMessage({

@@ -1,23 +1,36 @@
 <template>
   <DefaultLayout>
-    <div class="login-container main-container-pattern">
-      <el-card shadow="hover" class="login-card" :body-style="{ padding: '40px' }">
-        <AppLogo></AppLogo>
+    <div class="login-container">
+      <el-card shadow="always" class="login-card" :body-style="{ padding: '40px' }">
+        <app_logo></app_logo>
 
         <h2 class="title">Sign In</h2>
 
         <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="top">
           <el-form-item prop="email" label="Email" label-width="150px">
-            <el-input v-model="loginData.email" prefix-icon="User" placeholder="Email" size="large"></el-input>
+            <el-input
+              v-model="loginData.email"
+              prefix-icon="User"
+              placeholder="Email"
+              size="large"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="password" label="Password" label-width="150px">
-            <el-input type="password" v-model="loginData.password" prefix-icon="Lock" placeholder="Password" size="large"
-              show-password></el-input>
+            <el-input
+              type="password"
+              v-model="loginData.password"
+              prefix-icon="Lock"
+              placeholder="Password"
+              size="large"
+              show-password
+            ></el-input>
           </el-form-item>
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" class="login-button" @click="login" size="large" round>Log In</el-button>
+              <el-button type="primary" class="login-button" @click="login" size="large" round
+                >Log In</el-button
+              >
             </el-form-item>
           </el-row>
         </el-form>
@@ -38,9 +51,9 @@
 <script setup>
 import { ref } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
-import AppLogo from '../components/AppLogo.vue'
+import app_logo from '../components/app_logo.vue'
 import { ElMessage } from 'element-plus'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -64,8 +77,8 @@ const login = () => {
     if (valid) {
       const auth = getAuth()
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in 
+        .then(() => {
+          // Signed in
           // const user = userCredential.user;
           ElMessage({
             message: 'Congrats, you logged in.',
@@ -78,8 +91,7 @@ const login = () => {
             type: 'error',
             message: error.message
           })
-        });
-
+        })
     }
   })
 }
