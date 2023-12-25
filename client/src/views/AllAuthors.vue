@@ -9,10 +9,9 @@
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
-              <el-button link type="primary" size="small">Edit</el-button>
-              <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)"
-                >Delete</el-button
-              >
+<!--              <el-button link type="primary" size="small">Edit</el-button>-->
+              <edit-author-dialog :author="scope.row"></edit-author-dialog>
+              <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)">Delete</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -40,6 +39,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getAuth } from 'firebase/auth'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import EditAuthorDialog from "@/components/EditAuthorDialog.vue";
 
 const router = useRouter()
 const authors = ref([])
