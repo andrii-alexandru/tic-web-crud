@@ -6,7 +6,7 @@
           <el-menu :default-openeds="['2']">
             <el-sub-menu index="1">
               <template #title>
-                <el-icon> <user /> </el-icon>USER
+                <el-icon> <user /> </el-icon>User
               </template>
               <el-menu-item-group>
                 <template #title>User data section</template>
@@ -24,10 +24,19 @@
             </el-sub-menu>
             <el-sub-menu index="2">
               <template #title>
-                <el-icon><Collection /></el-icon>Quotes
+                <el-icon><Collection /></el-icon>Authors & Quotes
               </template>
               <el-menu-item-group>
-                <template #title></template>
+                <template #title>Authors section</template>
+                <el-menu-item index="2-1" @click="redirectTo('/authors')">
+                  All authors
+                </el-menu-item>
+                <el-menu-item index="2-2" @click="redirectTo('/create-author')">
+                  Create author
+                </el-menu-item>
+              </el-menu-item-group>
+              <el-menu-item-group>
+                <template #title>Quotes section</template>
                 <el-menu-item index="2-1" @click="redirectTo('/quotes')"> All quotes </el-menu-item>
                 <el-menu-item index="2-2" @click="redirectTo('/create-quote')">
                   Create quote
@@ -89,10 +98,10 @@ const logout = function () {
   signOut(auth)
     .then(() => {
       ElMessage({
-        message: 'Congrats, you logged in.',
-        type: 'success'
+        message: 'You logged out.',
+        type: 'info'
       })
-      router.push('/login')
+      router.push('/')
     })
     .catch((error) => {
       ElMessage({
@@ -129,5 +138,9 @@ const redirectTo = function (path) {
 
 .layout-container-demo .el-main {
   padding: 0;
+}
+
+.el-aside {
+  background-color: transparent !important;
 }
 </style>

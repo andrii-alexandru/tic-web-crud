@@ -40,9 +40,19 @@ const router = createRouter({
       component: () => import('../views/AllQuotes.vue')
     },
     {
+      path: '/authors',
+      name: 'authors',
+      component: () => import('../views/AllAuthors.vue')
+    },
+    {
       path: '/create-quote',
       name: 'create-quote',
       component: () => import('../views/CreateQuote.vue')
+    },
+    {
+      path: '/create-author',
+      name: 'create-author',
+      component: () => import('../views/CreateAuthor.vue')
     },
     // Wildcard route for 404
     {

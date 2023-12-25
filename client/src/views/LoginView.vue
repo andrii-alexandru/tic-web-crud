@@ -84,7 +84,7 @@ const login = () => {
             message: 'Congrats, you logged in.',
             type: 'success'
           })
-          router.push('/homepage')
+          router.push('/my-account')
         })
         .catch((error) => {
           ElMessage({

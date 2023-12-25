@@ -1,0 +1,149 @@
+<template>
+  <DefaultLayout>
+    <div class="author-form-container">
+      <el-card shadow="always" class="author-form-card">
+        <h2 class="title">Create New Author</h2>
+        <el-form
+          ref="authorForm"
+          :model="authorData"
+          :rules="authorRules"
+          label-position="top"
+          class="author-form"
+        >
+          <el-form-item prop="name" label="Author Name" label-width="150px">
+            <el-input
+              v-model="authorData.name"
+              prefix-icon="User"
+              placeholder="Author Name"
+              size="large"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="birthDate" label="Birth Date" label-width="150px">
+            <el-date-picker
+              v-model="authorData.birthDate"
+              type="date"
+              placeholder="Birth Date"
+              size="large"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item prop="nationality" label="Nationality" label-width="150px">
+            <nationalities-dropdown
+              @selected-nationality="
+                (selectedNationality) => (authorData.nationality = selectedNationality)
+              "
+            />
+          </el-form-item>
+
+          <el-row justify="center">
+            <el-form-item>
+              <el-button
+                type="primary"
+                class="create-button"
+                @click="createAuthor"
+                size="large"
+                round
+                >Create Author</el-button
+              >
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </el-card>
+    </div>
+  </DefaultLayout>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import DefaultLayout from '../components/default_layout.vue'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
+import { getAuth } from 'firebase/auth'
+import axios from 'axios'
+import NationalitiesDropdown from '../components/NationalitiesDropdown.vue'
+
+const router = useRouter()
+
+const authorData = ref({
+  name: '',
+  birthDate: '',
+  nationality: ''
+})
+
+const authorForm = ref(null)
+
+const authorRules = {
+  name: [{ required: true, message: 'Please enter the author name', trigger: 'blur' }],
+  birthDate: [{ required: true, message: 'Please enter the birth date', trigger: 'blur' }]
+}
+
+const createAuthor = async () => {
+  console.log('authorData: ', authorData.value)
+  authorForm.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        const idToken = await getFirebaseIdToken()
+
+        const response = await axios.post('http://localhost:3000/create-author', authorData.value, {
+          headers: {
+            Authorization: idToken
+          }
+        })
+
+        if (response.status === 200) {
+          ElMessage({
+            message: 'Author created successfully.',
+            type: 'success'
+          })
+          router.push('/authors')
+        } else {
+          console.error('Error creating author: ', response.data)
+          ElMessage({
+            type: 'error',
+            message: 'Error creating the author.'
+          })
+        }
+      } catch (error) {
+        console.error('Error creating author: ', error)
+        ElMessage({
+          type: 'error',
+          message: 'Error creating the author.'
+        })
+      }
+    }
+  })
+}
+
+const auth = getAuth()
+const getFirebaseIdToken = async () => {
+  const user = auth.currentUser
+  if (user) {
+    return await user.getIdToken()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: 'You must be logged in to create an author'
+    })
+    router.push('/login')
+  }
+}
+</script>
+
+<style scoped>
+.author-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.author-form-container .author-form-card {
+  width: 60vw;
+  padding: 4rem;
+}
+
+@media screen and (max-width: 768px) {
+  .author-form-container .author-form-card {
+    width: 90vw;
+    padding: 1rem;
+  }
+}
+</style>

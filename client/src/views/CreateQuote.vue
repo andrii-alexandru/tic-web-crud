@@ -10,13 +10,27 @@
           label-position="top"
           class="quote-form"
         >
-          <el-form-item prop="author" label="Author" label-width="150px">
-            <el-input
-              v-model="quoteData.author"
-              prefix-icon="User"
-              placeholder="Author"
-              size="large"
-            ></el-input>
+          <el-form-item prop="author" label="Author">
+            <el-select v-model="quoteData.author" placeholder="Select Author" size="large">
+              <el-option
+                v-for="author in authors"
+                :key="author.id"
+                :label="author.name"
+                :value="author.id"
+              ></el-option>
+            </el-select>
+            &nbsp;&nbsp; &nbsp;&nbsp;
+            <add-author-dialog
+              v-if="authors.length > 0"
+              :quoteData="quoteData"
+              :authors="authors"
+              :fetchAuthors="fetchAuthors"
+              @authorAdded="
+                () => {
+                  fetchAuthors()
+                }
+              "
+            />
           </el-form-item>
           <el-form-item prop="body" label="Quote Body" label-width="150px">
             <el-input
@@ -56,45 +70,57 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { getFirestore, collection, addDoc } from 'firebase/firestore'
-
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-
-const auth = getAuth()
+import { getAuth } from 'firebase/auth'
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
+import axios from 'axios'
+import AddAuthorDialog from '../components/AddAuthorDialog.vue'
 
 const router = useRouter()
 
 const quoteData = ref({
-  author: '',
+  author: '', // Now it stores the ID of the selected author
   body: '',
   bookReference: '',
   significant: false
 })
 
+const authors = ref([])
 const quoteForm = ref(null)
 
 const quoteRules = {
-  author: [{ required: true, message: 'Please enter the author', trigger: 'blur' }],
+  author: [{ required: true, message: 'Please select the author', trigger: 'blur' }],
   body: [{ required: true, message: 'Please enter the quote body', trigger: 'blur' }]
 }
 
 const createQuote = async () => {
   quoteForm.value.validate(async (valid) => {
     if (valid) {
-      checkAuth()
       try {
-        const db = getFirestore()
-        const quotesCollection = collection(db, 'quotes')
-        await addDoc(quotesCollection, quoteData.value)
-        ElMessage({
-          message: 'Quote created successfully.',
-          type: 'success'
+        const idToken = await getFirebaseIdToken()
+
+        const response = await axios.post('http://localhost:3000/create-quote', quoteData.value, {
+          headers: {
+            Authorization: idToken
+          }
         })
-        router.push('/quotes')
+
+        if (response.status === 200) {
+          ElMessage({
+            message: 'Quote created successfully.',
+            type: 'success'
+          })
+          router.push('/quotes')
+        } else {
+          console.error('Error creating quote: ', response.data)
+          ElMessage({
+            type: 'error',
+            message: 'Error creating the quote.'
+          })
+        }
       } catch (error) {
         console.error('Error creating quote: ', error)
         ElMessage({
@@ -106,13 +132,37 @@ const createQuote = async () => {
   })
 }
 
-const checkAuth = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      router.push('/login')
-    }
-  })
+const auth = getAuth()
+const getFirebaseIdToken = async () => {
+  const user = auth.currentUser
+  if (user) {
+    return await user.getIdToken()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: 'You must be logged in to create a quote'
+    })
+    router.push('/login')
+  }
 }
+
+// Fetch authors from Firestore
+const fetchAuthors = async () => {
+  try {
+    const db = getFirestore()
+    const authorsCollection = collection(db, 'authors') // Adjust to your actual collection name
+    const querySnapshot = await getDocs(authorsCollection)
+
+    authors.value = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  } catch (error) {
+    console.error('Error fetching authors: ', error)
+  }
+}
+
+// Fetch authors on component mount
+onMounted(() => {
+  fetchAuthors()
+})
 </script>
 
 <style scoped>
