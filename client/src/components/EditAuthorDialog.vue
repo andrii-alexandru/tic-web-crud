@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import { getAuth } from 'firebase/auth'
+import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
 
 const authorProp = defineProps({
@@ -31,14 +31,17 @@ const editQuote = async () => {
   authorForm.value.validate(async (valid) => {
     if (valid) {
       try {
+        const idToken = await getFirebaseIdToken()
+        if (idToken === null) return
+
         const response = await axios.put(
-            `http://localhost:3000/edit-author/${authorData.value.id}`,
-            authorData.value,
-            {
-              headers: {
-                Authorization: await getFirebaseIdToken()
-              }
+          `http://localhost:3000/edit-author/${authorData.value.id}`,
+          authorData.value,
+          {
+            headers: {
+              Authorization: idToken
             }
+          }
         )
         if (response.status === 200) {
           ElMessage({
@@ -63,20 +66,6 @@ const editQuote = async () => {
   })
 }
 
-const auth = getAuth()
-const getFirebaseIdToken = async () => {
-  const user = auth.currentUser
-  if (user) {
-    return await user.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      message: 'You must be logged in to edit an author.'
-    })
-    dialogVisible.value = false
-  }
-}
-
 onMounted(() => {
   authorData.value = authorProp.author
 })
@@ -87,11 +76,11 @@ onMounted(() => {
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
 
     <el-dialog
-        title="Edit Author"
-        v-model="dialogVisible"
-        width="80vw"
-        style="z-index: 100 !important"
-        :append-to-body="true"
+      title="Edit Author"
+      v-model="dialogVisible"
+      width="80vw"
+      style="z-index: 100 !important"
+      :append-to-body="true"
     >
       <el-form :model="authorData" :rules="authorRules" ref="authorForm" label-position="top">
         <el-form-item prop="name" label="Author Name" class="form-item">
@@ -112,6 +101,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

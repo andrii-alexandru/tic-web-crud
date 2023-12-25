@@ -74,7 +74,7 @@ import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { getAuth } from 'firebase/auth'
+import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import axios from 'axios'
 import AddAuthorDialog from '../components/AddAuthorDialog.vue'
@@ -101,6 +101,7 @@ const createQuote = async () => {
     if (valid) {
       try {
         const idToken = await getFirebaseIdToken()
+        if (idToken === null) return
 
         const response = await axios.post('http://localhost:3000/create-quote', quoteData.value, {
           headers: {
@@ -130,20 +131,6 @@ const createQuote = async () => {
       }
     }
   })
-}
-
-const auth = getAuth()
-const getFirebaseIdToken = async () => {
-  const user = auth.currentUser
-  if (user) {
-    return await user.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      message: 'You must be logged in to create a quote'
-    })
-    router.push('/login')
-  }
 }
 
 // Fetch authors from Firestore

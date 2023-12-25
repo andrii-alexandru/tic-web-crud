@@ -9,9 +9,11 @@
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
-<!--              <el-button link type="primary" size="small">Edit</el-button>-->
+              <!--              <el-button link type="primary" size="small">Edit</el-button>-->
               <edit-author-dialog :author="scope.row"></edit-author-dialog>
-              <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)">Delete</el-button>
+              <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)"
+                >Delete</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -36,12 +38,10 @@ import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAuth } from 'firebase/auth'
+import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
-import EditAuthorDialog from "@/components/EditAuthorDialog.vue";
+import EditAuthorDialog from '@/components/EditAuthorDialog.vue'
 
-const router = useRouter()
 const authors = ref([])
 const filteredAuthors = ref([])
 const loading = ref(true)
@@ -94,9 +94,12 @@ const deleteQuote = async (authorId) => {
       type: 'error'
     })
       .then(async () => {
+        const idToken = await getFirebaseIdToken()
+        if (idToken === null) return
+
         await axios.delete(`http://localhost:3000/delete-author/${authorId}`, {
           headers: {
-            Authorization: await getFirebaseIdToken()
+            Authorization: idToken
           }
         })
 
@@ -115,20 +118,6 @@ const deleteQuote = async (authorId) => {
       })
   } catch (error) {
     console.error('Error deleting quote: ', error)
-  }
-}
-
-const auth = getAuth()
-const getFirebaseIdToken = async () => {
-  const user = auth.currentUser
-  if (user) {
-    return await user.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      message: 'You must be logged in to create a quote'
-    })
-    router.push('/login')
   }
 }
 

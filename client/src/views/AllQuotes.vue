@@ -44,12 +44,10 @@ import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { getFirestore, doc, collection, getDocs, getDoc } from 'firebase/firestore'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAuth } from 'firebase/auth'
+import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 import EditQuoteDialog from '../components/EditQuoteDialog.vue'
 
-const router = useRouter()
 const quotes = ref([])
 const filteredQuotes = ref([])
 const loading = ref(true)
@@ -113,9 +111,12 @@ const deleteQuote = async (quoteId) => {
       type: 'error'
     })
       .then(async () => {
+        const idToken = await getFirebaseIdToken()
+        if (idToken === null) return
+
         await axios.delete(`http://localhost:3000/delete-quote/${quoteId}`, {
           headers: {
-            Authorization: await getFirebaseIdToken()
+            Authorization: idToken
           }
         })
 
@@ -134,20 +135,6 @@ const deleteQuote = async (quoteId) => {
       })
   } catch (error) {
     console.error('Error deleting quote: ', error)
-  }
-}
-
-const auth = getAuth()
-const getFirebaseIdToken = async () => {
-  const user = auth.currentUser
-  if (user) {
-    return await user.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      message: 'You must be logged in to create a quote'
-    })
-    router.push('/login')
   }
 }
 

@@ -21,8 +21,8 @@
           <el-form-item prop="birthDate" label="Birth Date" label-width="150px">
             <el-date-picker
               v-model="authorData.birthDate"
-              type="date"
-              placeholder="Birth Date"
+              type="year"
+              placeholder="Pick a year"
               size="large"
             ></el-date-picker>
           </el-form-item>
@@ -56,10 +56,10 @@
 import { ref } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
-import { getAuth } from 'firebase/auth'
+import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
 import NationalitiesDropdown from '../components/NationalitiesDropdown.vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -73,7 +73,23 @@ const authorForm = ref(null)
 
 const authorRules = {
   name: [{ required: true, message: 'Please enter the author name', trigger: 'blur' }],
-  birthDate: [{ required: true, message: 'Please enter the birth date', trigger: 'blur' }]
+  birthDate: [
+    { required: true, message: 'Please enter the birth date', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        const currentDate = new Date()
+        const birthDate = new Date(value)
+        const age = currentDate.getFullYear() - birthDate.getFullYear()
+
+        if (age < 5) {
+          callback(new Error('Author must be at least 5 years old.'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ]
 }
 
 const createAuthor = async () => {
@@ -82,6 +98,7 @@ const createAuthor = async () => {
     if (valid) {
       try {
         const idToken = await getFirebaseIdToken()
+        if (idToken === null) return
 
         const response = await axios.post('http://localhost:3000/create-author', authorData.value, {
           headers: {
@@ -111,20 +128,6 @@ const createAuthor = async () => {
       }
     }
   })
-}
-
-const auth = getAuth()
-const getFirebaseIdToken = async () => {
-  const user = auth.currentUser
-  if (user) {
-    return await user.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      message: 'You must be logged in to create an author'
-    })
-    router.push('/login')
-  }
 }
 </script>
 

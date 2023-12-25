@@ -65,15 +65,12 @@ import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 import AddAuthorDialog from '../components/AddAuthorDialog.vue'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
-import { getAuth } from 'firebase/auth'
+import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
 
 const quoteProp = defineProps({
   quote: Object
 })
-
-const router = useRouter()
 
 const emit = defineEmits(['quoteEdited'])
 
@@ -111,12 +108,15 @@ const editQuote = async () => {
   quoteForm.value.validate(async (valid) => {
     if (valid) {
       try {
+        const idToken = await getFirebaseIdToken()
+        if (idToken === null) return
+
         const response = await axios.put(
           `http://localhost:3000/edit-quote/${quoteData.value.id}`,
           quoteData.value,
           {
             headers: {
-              Authorization: await getFirebaseIdToken()
+              Authorization: idToken
             }
           }
         )
@@ -141,20 +141,6 @@ const editQuote = async () => {
       return false
     }
   })
-}
-
-const auth = getAuth()
-const getFirebaseIdToken = async () => {
-  const user = auth.currentUser
-  if (user) {
-    return await user.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      message: 'You must be logged in to create a quote'
-    })
-    router.push('/login')
-  }
 }
 
 onMounted(() => {
