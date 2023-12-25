@@ -56,9 +56,14 @@ const fetchAuthors = async () => {
 
     authors.value = querySnapshot.docs.map((doc) => {
       const { birthDate, ...otherData } = doc.data()
+
+      //check if birthDate exists and is a valid date
+      const birthDateValid =
+        birthDate && birthDate.toDate ? birthDate.toDate().getFullYear() : birthDate
+
       return {
         id: doc.id,
-        birthDate: birthDate ? birthDate.toDate().getFullYear() : null,
+        birthDate: birthDateValid,
         ...otherData
       }
     })

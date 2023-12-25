@@ -1,5 +1,7 @@
 const express = require("express");
 const authenticateUser = require("./authMiddleware");
+const faker = require("faker");
+const { auth } = require("firebase-admin");
 
 const createQuoteRoute = (admin) => {
   const router = express.Router();
@@ -70,6 +72,45 @@ const createQuoteRoute = (admin) => {
       res.status(200).json({ message: "Quote deleted successfully" });
     } catch (error) {
       console.error("Error deleting quote:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+
+  router.post("/generate-random-quotes", authenticateUser, async (req, res) => {
+    try {
+      const userId = req.user.uid;
+
+      const authorsCollection = admin.firestore().collection("authors");
+      const authors = await authorsCollection.get();
+
+      const quotesCollection = admin.firestore().collection("quotes");
+
+      const randomQuotes = Array.from({ length: 10 }, () => {
+        const randomAuthor =
+          authors.docs[Math.floor(Math.random() * authors.docs.length)].id;
+
+        return {
+          author: randomAuthor,
+          body: faker.lorem.paragraph(),
+          bookReference: faker.lorem.words(),
+          significant: faker.datatype.boolean(),
+          userId,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        };
+      });
+
+      await Promise.all(
+        randomQuotes.map(async (quote) => {
+          await quotesCollection.add({
+            ...quote,
+            userId,
+          });
+        })
+      );
+
+      res.status(200).json({ message: "Random quotes generated successfully" });
+    } catch (error) {
+      console.error("Error generating random quotes:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
   });

@@ -1,9 +1,10 @@
 const express = require("express");
 const authenticateUser = require("./authMiddleware");
+const faker = require("faker");
 
 const createAuthorRoute = (admin) => {
   const router = express.Router();
-  const authorCollection = admin.firestore().collection("authors");
+  const authorsCollection = admin.firestore().collection("authors");
 
   // Endpoint for creating a author
   router.post("/create-author", authenticateUser, async (req, res) => {
@@ -17,7 +18,7 @@ const createAuthorRoute = (admin) => {
         new Date(authorData.birthDate)
       );
 
-      await authorCollection.add({
+      await authorsCollection.add({
         ...authorData,
         userId,
         userEmail,
@@ -37,7 +38,7 @@ const createAuthorRoute = (admin) => {
       const authorId = req.params.id;
       const authorData = req.body;
 
-      const authorRef = authorCollection.doc(authorId);
+      const authorRef = authorsCollection.doc(authorId);
       const doc = await authorRef.get();
 
       if (!doc.exists) {
@@ -62,7 +63,7 @@ const createAuthorRoute = (admin) => {
     try {
       const authorId = req.params.id;
 
-      const authorRef = authorCollection.doc(authorId);
+      const authorRef = authorsCollection.doc(authorId);
       const doc = await authorRef.get();
 
       if (!doc.exists) {
@@ -78,6 +79,37 @@ const createAuthorRoute = (admin) => {
       res.status(500).json({ message: "Internal Server Error" });
     }
   });
+
+  router.post(
+    "/generate-random-authors",
+    authenticateUser,
+    async (req, res) => {
+      try {
+        const userId = req.user.uid;
+
+        const randomAuthors = Array.from({ length: 10 }, () => ({
+          name: faker.name.findName(),
+          birthDate: faker.date.past(),
+          nationality: faker.address.country(),
+          userId,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        }));
+
+        await Promise.all(
+          randomAuthors.map(async (author) => {
+            await authorsCollection.add(author);
+          })
+        );
+
+        res
+          .status(200)
+          .json({ message: "Random authors generated successfully" });
+      } catch (error) {
+        console.error("Error generating random authors:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
+  );
 
   return router;
 };

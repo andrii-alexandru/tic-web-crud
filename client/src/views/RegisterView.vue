@@ -46,20 +46,14 @@
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" class="login-button" @click="register" size="large"
+              <el-button type="primary" class="login-button" @click="register" size="large" round
                 >Register</el-button
               >
-              <el-button class="login-button" @click="register" size="large" round plain>
-                <img src="../assets/images/google.svg" alt="google logo" class="svg_google_image" />
-              </el-button>
             </el-form-item>
           </el-row>
         </el-form>
 
-        <el-row justify="space-between">
-          <RouterLink to="/forgot-password">
-            <el-link type="danger" :icon="Edit">Forgot Password?</el-link>
-          </RouterLink>
+        <el-row justify="end">
           <RouterLink to="/login">
             <el-link type="primary">Login</el-link>
           </RouterLink>
@@ -138,9 +132,3 @@ const register = () => {
   })
 }
 </script>
-
-<style scoped>
-.svg_google_image {
-  height: 20px;
-}
-</style>

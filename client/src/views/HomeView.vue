@@ -5,17 +5,17 @@ import app_logo from '../components/app_logo.vue'
 
 <template>
   <DefaultLayout>
-    <div class="homepage">
+    <div class="homepage mt-20">
       <app_logo></app_logo>
       <h1>Welcome to our Quotes CRUD App!</h1>
       <p>
-        "Explore the wisdom of words as you journey through a collection of inspiring and
+        Explore the wisdom of words as you journey through a collection of inspiring and
         thought-provoking quotes. Immerse yourself in the power of language, where every quote tells
         a unique story and imparts a valuable lesson. Whether you seek motivation, reflection, or
         simply a moment of inspiration, our app is your gateway to a world of profound insights.
         Enjoy the seamless experience of creating, reading, updating, and deleting quotes
         effortlessly. Let the words resonate and uplift your spirits. Dive into the realm of
-        timeless wisdom with our Quotes CRUD App – where words come to life."
+        timeless wisdom with our Quotes CRUD App – where words come to life.
       </p>
     </div>
   </DefaultLayout>
@@ -35,6 +35,8 @@ import app_logo from '../components/app_logo.vue'
   font-size: 2rem;
   font-weight: 700;
   color: var(--primary-color);
+  padding: 1rem;
+  text-align: center;
 }
 .homepage p {
   font-size: 1.2rem;
@@ -42,5 +44,15 @@ import app_logo from '../components/app_logo.vue'
   color: var(--secondary-color);
   text-align: center;
   padding: 5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .homepage h1 {
+    font-size: 1.5rem;
+  }
+  .homepage p {
+    font-size: 1rem;
+    padding: 2rem;
+  }
 }
 </style>

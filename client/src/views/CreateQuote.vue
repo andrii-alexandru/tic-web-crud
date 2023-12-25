@@ -19,7 +19,7 @@
                 :value="author.id"
               ></el-option>
             </el-select>
-            &nbsp;&nbsp; &nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
             <add-author-dialog
               v-if="authors.length > 0"
               :quoteData="quoteData"
@@ -41,11 +41,13 @@
             ></el-input>
           </el-form-item>
           <el-form-item prop="bookReference" label="Book or Reference" label-width="150px">
-            <el-input
-              v-model="quoteData.bookReference"
-              placeholder="Book or Reference"
-              size="large"
-            ></el-input>
+            <el-col :span="12">
+              <el-input
+                v-model="quoteData.bookReference"
+                placeholder="Book or Reference"
+                size="large"
+              ></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="Significant">
             <el-switch v-model="quoteData.significant" />

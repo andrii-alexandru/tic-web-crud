@@ -6,7 +6,7 @@
           <el-menu :default-openeds="['2']">
             <el-sub-menu index="1">
               <template #title>
-                <el-icon> <user /> </el-icon>User
+                <el-icon> <User /> </el-icon>User
               </template>
               <el-menu-item-group>
                 <template #title>User data section</template>
@@ -43,58 +43,70 @@
                 </el-menu-item>
               </el-menu-item-group>
             </el-sub-menu>
+            <el-sub-menu index="3">
+              <template #title>
+                <el-icon><CirclePlus /></el-icon>Random data
+              </template>
+              <el-menu-item-group>
+                <template #title>Generate faker data (10 each)</template>
+                <el-menu-item index="3-1" @click="generateRandomAuthors">
+                  Generate Random Authors
+                </el-menu-item>
+                <el-menu-item index="3-2" @click="generateRandomQuotes">
+                  Generate Random Quotes
+                </el-menu-item>
+              </el-menu-item-group>
+            </el-sub-menu>
           </el-menu>
         </el-scrollbar>
       </el-aside>
     </el-drawer>
-    <el-container>
-      <el-header>
-        <el-row justify="space-between" align="middle" style="height: 100%">
-          <el-button
-            type="primary"
-            plain
-            style="margin-left: 16px"
-            @click="aside_visible = true"
-            round
-          >
-            <el-icon>
-              <Expand />
-            </el-icon>
-          </el-button>
-          <!-- <el-dropdown>
-            <el-icon size="40"><CaretBottom /></el-icon>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item><RouterLink to="/login">Login</RouterLink></el-dropdown-item>
-                <el-dropdown-item>Add</el-dropdown-item>
-                <el-dropdown-item>Delete</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown> -->
-          <Thememodeswitch />
-        </el-row>
-      </el-header>
+    <el-header>
+      <el-row justify="space-between" align="middle" style="height: 100%">
+        <el-button
+          type="primary"
+          plain
+          style="margin-left: 16px"
+          @click="aside_visible = true"
+          round
+        >
+          <el-icon>
+            <Expand />
+          </el-icon>
+        </el-button>
+        <el-button link v-if="!userRef" @click="redirectTo('/login')">Login</el-button>
+        <span v-else>Welcome, {{ userRef.email }}</span>
+        <Thememodeswitch />
+      </el-row>
+    </el-header>
 
-      <el-main>
-        <slot></slot>
-      </el-main>
-    </el-container>
+    <el-main class="mt-20">
+      <slot></slot>
+    </el-main>
   </el-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Thememodeswitch from './ThemeModeSwitch.vue'
-import { getAuth, signOut } from 'firebase/auth'
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import axios from 'axios'
 
 const router = useRouter()
+const auth = getAuth()
+const userRef = ref(null)
+
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    userRef.value = user
+  })
+})
 
 const aside_visible = ref(false)
 
 const logout = function () {
-  const auth = getAuth()
   signOut(auth)
     .then(() => {
       ElMessage({
@@ -114,13 +126,103 @@ const logout = function () {
 const redirectTo = function (path) {
   router.push(path)
 }
+
+const generateRandomAuthors = function () {
+  ElMessageBox.confirm('This will generate 10 random authors. Continue?', 'Faker Data - Authors', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning'
+  })
+    .then(async () => {
+      const idToken = await getFirebaseIdToken()
+      if (idToken === null) return
+
+      const response = await axios.post('http://localhost:3000/generate-random-authors', null, {
+        headers: {
+          Authorization: idToken
+        }
+      })
+
+      if (response.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: 'Generate authors completed'
+        })
+      } else {
+        console.error('Error generating authors: ', response.data)
+        ElMessage({
+          type: 'error',
+          message: 'Error generating the authors.'
+        })
+      }
+
+      router.push('/authors')
+    })
+    .catch((e) => {
+      console.error(e)
+      ElMessage({
+        type: 'info',
+        message: 'There was an error generating the authors.'
+      })
+    })
+}
+
+const generateRandomQuotes = function () {
+  ElMessageBox.confirm('This will generate 10 random quotes. Continue?', 'Faker Data - Quotes', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning'
+  })
+    .then(async () => {
+      const idToken = await getFirebaseIdToken()
+      if (idToken === null) return
+
+      const response = await axios.post('http://localhost:3000/generate-random-quotes', null, {
+        headers: {
+          Authorization: idToken
+        }
+      })
+
+      if (response.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: 'Generate quotes completed'
+        })
+        router.push('/quotes')
+      } else {
+        console.error('Error generating quotes: ', response.data)
+        ElMessage({
+          type: 'error',
+          message: 'Error generating the quotes.'
+        })
+      }
+    })
+    .catch((e) => {
+      console.error(e)
+      ElMessage({
+        type: 'info',
+        message: 'There was an error generating the quotes.'
+      })
+    })
+}
+const getFirebaseIdToken = async () => {
+  const userRef = auth.currentUser
+
+  if (userRef) {
+    return await userRef.getIdToken()
+  } else {
+    ElMessage({
+      type: 'error',
+      dangerouslyUseHTMLString: true, // Allow HTML in the message
+      message: 'You must be <a href="/login">logged in</a> to perform this action',
+      showClose: true
+    })
+    return null
+  }
+}
 </script>
 
 <style scoped>
-.layout-container-demo {
-  height: 100vh;
-}
-
 .layout-container-demo .el-header {
   position: relative;
   background-color: var(--el-color-primary-light-9);

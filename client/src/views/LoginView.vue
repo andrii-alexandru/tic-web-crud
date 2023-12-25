@@ -6,7 +6,13 @@
 
         <h2 class="title">Sign In</h2>
 
-        <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="top">
+        <el-form
+          ref="loginForm"
+          :model="loginData"
+          :rules="loginRules"
+          label-position="left"
+          @keyup.enter="login"
+        >
           <el-form-item prop="email" label="Email" label-width="150px">
             <el-input
               v-model="loginData.email"
@@ -37,7 +43,7 @@
 
         <el-row justify="space-between">
           <RouterLink to="/forgot-password">
-            <el-link type="danger" :icon="Edit">Forgot Password?</el-link>
+            <el-link type="danger">Forgot Password?</el-link>
           </RouterLink>
           <RouterLink to="/register">
             <el-link type="primary">Register</el-link>

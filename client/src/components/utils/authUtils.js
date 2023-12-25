@@ -2,7 +2,6 @@ import { ElMessage } from 'element-plus'
 import { getAuth } from 'firebase/auth'
 
 const auth = getAuth()
-
 export const getFirebaseIdToken = async () => {
   const user = auth.currentUser
 

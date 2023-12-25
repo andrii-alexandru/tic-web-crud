@@ -18,21 +18,26 @@
               size="large"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="birthDate" label="Birth Date" label-width="150px">
-            <el-date-picker
-              v-model="authorData.birthDate"
-              type="year"
-              placeholder="Pick a year"
-              size="large"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item prop="nationality" label="Nationality" label-width="150px">
-            <nationalities-dropdown
-              @selected-nationality="
-                (selectedNationality) => (authorData.nationality = selectedNationality)
-              "
-            />
-          </el-form-item>
+          <el-row :gutter="10">
+            <el-col :xs="24" :md="12">
+              <el-form-item prop="birthDate" label="Birth Date" label-width="150px">
+                <el-date-picker
+                  v-model="authorData.birthDate"
+                  type="year"
+                  placeholder="Pick a year"
+                  size="large"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :md="12">
+              <el-form-item prop="nationality" label="Nationality" label-width="150px">
+                <nationalities-dropdown
+                  @selected-nationality="
+                    (selectedNationality) => (authorData.nationality = selectedNationality)
+                  "
+                /> </el-form-item
+            ></el-col>
+          </el-row>
 
           <el-row justify="center">
             <el-form-item>

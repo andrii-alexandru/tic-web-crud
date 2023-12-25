@@ -63,15 +63,17 @@ const fetchQuotes = async () => {
       querySnapshot.docs.map(async (document) => {
         const quoteData = { id: document.id, ...document.data() }
 
-        // Assuming the reference to the author is stored in the 'author' field
         if (quoteData.author) {
           const authorId = quoteData.author
+          console.log('authorId: ', authorId)
 
           const authorRef = doc(db, 'authors', authorId)
           const authorDoc = await getDoc(authorRef)
 
           if (authorDoc.exists()) {
             quoteData.author = authorDoc.data().name
+          } else {
+            quoteData.author = 'Unknown'
           }
         }
 
