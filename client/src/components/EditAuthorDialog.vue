@@ -1,9 +1,45 @@
+<template>
+  <div>
+    <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
+
+    <el-dialog
+      title="Edit Author"
+      v-model="dialogVisible"
+      width="80vw"
+      style="z-index: 100 !important"
+      :append-to-body="true"
+    >
+      <el-form :model="authorData" :rules="authorRules" ref="authorForm" label-position="top">
+        <el-form-item prop="name" label="Author Name" class="form-item">
+          <el-input v-model="authorData.name" placeholder="Enter author name"></el-input>
+        </el-form-item>
+        <el-form-item prop="birthDate" label="Birth Date" class="form-item">
+          <el-date-picker v-model="authorData.birthDate" type="year" placeholder="Pick a year" />
+        </el-form-item>
+        <el-form-item prop="nationality" label="Nationality" class="form-item">
+          <nationalities-dropdown
+            :nationality="authorData.nationality"
+            @selected-nationality="
+              (selectedNationality) => (authorData.nationality = selectedNationality)
+            "
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="editQuote">Edit</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
 <script setup>
 import { onMounted, ref } from 'vue'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
+import NationalitiesDropdown from '../components/NationalitiesDropdown.vue'
 
 const authorProp = defineProps({
   author: Object
@@ -70,35 +106,3 @@ onMounted(() => {
   authorData.value = authorProp.author
 })
 </script>
-
-<template>
-  <div>
-    <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
-
-    <el-dialog
-      title="Edit Author"
-      v-model="dialogVisible"
-      width="80vw"
-      style="z-index: 100 !important"
-      :append-to-body="true"
-    >
-      <el-form :model="authorData" :rules="authorRules" ref="authorForm" label-position="top">
-        <el-form-item prop="name" label="Author Name" class="form-item">
-          <el-input v-model="authorData.name" placeholder="Enter author name"></el-input>
-        </el-form-item>
-        <el-form-item prop="birthDate" label="Birth Date" class="form-item">
-          <el-date-picker v-model="authorData.birthDate" type="year" placeholder="Pick a year" />
-        </el-form-item>
-        <el-form-item prop="nationality" label="Nationality" class="form-item">
-          <el-input v-model="authorData.nationality" placeholder="Enter nationality"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="editQuote">Edit</el-button>
-      </template>
-    </el-dialog>
-  </div>
-</template>
-
-<style scoped></style>

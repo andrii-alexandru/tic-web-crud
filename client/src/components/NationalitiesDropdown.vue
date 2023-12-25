@@ -20,10 +20,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineProps } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['selectedNationality'])
+const props = defineProps(['nationality'])
 
 const nationalities = ref([])
 const selectedNationality = ref(null)
@@ -32,6 +33,11 @@ const fetchNationalities = async () => {
   try {
     const response = await axios.get('https://restcountries.com/v2/all')
     nationalities.value = response.data.map((country) => country.name)
+
+    // Set the selectedNationality based on the prop if it is provided
+    if (props.nationality) {
+      selectedNationality.value = props.nationality
+    }
   } catch (error) {
     console.error('Error fetching nationalities: ', error)
   }

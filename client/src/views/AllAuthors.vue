@@ -10,7 +10,10 @@
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
               <!--              <el-button link type="primary" size="small">Edit</el-button>-->
-              <edit-author-dialog :author="scope.row"></edit-author-dialog>
+              <edit-author-dialog
+                :author="scope.row"
+                @authorEdited="fetchAuthors"
+              ></edit-author-dialog>
               <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)"
                 >Delete</el-button
               >
@@ -57,7 +60,6 @@ const fetchAuthors = async () => {
     authors.value = querySnapshot.docs.map((doc) => {
       const { birthDate, ...otherData } = doc.data()
 
-      //check if birthDate exists and is a valid date
       const birthDateValid =
         birthDate && birthDate.toDate ? birthDate.toDate().getFullYear() : birthDate
 

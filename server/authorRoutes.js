@@ -1,6 +1,9 @@
 const express = require("express");
 const authenticateUser = require("./authMiddleware");
 const faker = require("faker");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const createAuthorRoute = (admin) => {
   const router = express.Router();
@@ -13,7 +16,6 @@ const createAuthorRoute = (admin) => {
       const userId = req.user.uid;
       const userEmail = req.user.email;
 
-      //format birthDate to timestamp
       authorData.birthDate = admin.firestore.Timestamp.fromDate(
         new Date(authorData.birthDate)
       );
@@ -45,6 +47,10 @@ const createAuthorRoute = (admin) => {
         res.status(404).json({ message: "author not found" });
         return;
       }
+
+      authorData.birthDate = admin.firestore.Timestamp.fromDate(
+        new Date(authorData.birthDate)
+      );
 
       await authorRef.update({
         ...authorData,
@@ -107,6 +113,49 @@ const createAuthorRoute = (admin) => {
       } catch (error) {
         console.error("Error generating random authors:", error);
         res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
+  );
+
+  const uploadFolder = path.join(__dirname, "uploads");
+  if (!fs.existsSync(uploadFolder)) {
+    fs.mkdirSync(uploadFolder);
+  }
+
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/"); // Specify the folder where uploaded files will be stored
+    },
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+    },
+  });
+
+  const upload = multer({ storage: storage });
+
+  router.post(
+    "/upload-profile-picture",
+    authenticateUser,
+    upload.single("file"),
+    (req, res) => {
+      try {
+        const file = req.file;
+        if (!file) {
+          return res.status(400).send("No file uploaded.");
+        }
+
+        const filePath = path.join(__dirname, "uploads", file.filename);
+        console.log(filePath);
+
+        res.status(200).send({
+          message: "File uploaded successfully.",
+          imageUrl: `http://localhost:${port}/${file.filename}`,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
       }
     }
   );

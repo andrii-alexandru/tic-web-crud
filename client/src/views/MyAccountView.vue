@@ -6,6 +6,8 @@
         <p>Edit personal account data</p>
       </div>
 
+      <profile-picture v-if="!disabledRef"></profile-picture>
+
       <el-form
         ref="accountForm"
         :model="newLoginData"
@@ -60,6 +62,7 @@ import { getAuth, onAuthStateChanged, updateEmail, updatePassword } from 'fireba
 import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
+import ProfilePicture from '../components/ProfilePicture.vue'
 
 const router = useRouter()
 
@@ -167,11 +170,12 @@ const editAccount = async () => {
 }
 
 .page-title {
-  margin: 70px 0px;
+  margin: 30px 0px;
 }
 
 .page-title h1 {
   font-size: 50px;
+  margin: 0;
 }
 
 .page-title p {
