@@ -4,7 +4,7 @@
       <el-card shadow="always" class="author-list-card">
         <h2 class="title">All Authors</h2>
         <el-table :data="filteredAuthors" style="width: 100%" v-loading="loading">
-          <el-table-column label="Author Name" prop="name"></el-table-column>
+          <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
           <el-table-column fixed="right" label="Operations" width="120">

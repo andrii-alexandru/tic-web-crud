@@ -10,15 +10,7 @@ import { ElMessage } from 'element-plus'
 import App from './App.vue'
 import router from './router'
 import { initializeApp } from 'firebase/app'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyC6EbMeDB4txzyYg503hqRmyZnKak2o2Us',
-  authDomain: 'tic-web-crud-9d48e.firebaseapp.com',
-  projectId: 'tic-web-crud-9d48e',
-  storageBucket: 'tic-web-crud-9d48e.appspot.com',
-  messagingSenderId: '950320698987',
-  appId: '1:950320698987:web:7714829e7ac9efda76832e'
-}
+import firebaseConfig from '../firebaseConfig'
 
 initializeApp(firebaseConfig)
 

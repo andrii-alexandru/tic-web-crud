@@ -6,7 +6,13 @@
         <p>Edit personal account data</p>
       </div>
 
-      <el-form ref="accountForm" :model="newLoginData" :rules="accountRules" label-position="left">
+      <el-form
+        ref="accountForm"
+        :model="newLoginData"
+        :rules="accountRules"
+        label-position="left"
+        :disabled="disabledRef"
+      >
         <el-form-item prop="email" label="Email" label-width="150px">
           <el-input
             v-model="newLoginData.email"
@@ -51,11 +57,23 @@
 <script setup>
 import DefaultLayout from '../components/default_layout.vue'
 import { getAuth, onAuthStateChanged, updateEmail, updatePassword } from 'firebase/auth'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+const disabledRef = ref(true)
+
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      disabledRef.value = false
+    } else {
+      disabledRef.value = true
+    }
+  })
+})
 
 const newLoginData = ref({
   email: '',

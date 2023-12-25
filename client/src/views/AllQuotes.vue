@@ -4,7 +4,7 @@
       <el-card shadow="always" class="quote-list-card">
         <h2 class="title">All Quotes</h2>
         <el-table :data="filteredQuotes" style="width: 100%" v-loading="loading">
-          <el-table-column label="Author" prop="author"></el-table-column>
+          <el-table-column label="Author" prop="author" sortable></el-table-column>
           <el-table-column label="Quote Body" prop="body"></el-table-column>
           <el-table-column label="Book or Reference" prop="bookReference"></el-table-column>
           <el-table-column label="Significant" prop="significant">
@@ -15,8 +15,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
-              <!-- <el-button link type="primary" size="small">Edit</el-button> -->
-              <edit-quote-dialog :quote="scope.row"></edit-quote-dialog>
+              <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
               <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)"
                 >Delete</el-button
               >

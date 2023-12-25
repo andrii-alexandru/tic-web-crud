@@ -7,7 +7,7 @@ import app_logo from '../components/app_logo.vue'
   <DefaultLayout>
     <div class="homepage mt-20">
       <app_logo></app_logo>
-      <h1>Welcome to our Quotes CRUD App!</h1>
+      <h1>Welcome to Quotes & Authors CRUD App!</h1>
       <p>
         Explore the wisdom of words as you journey through a collection of inspiring and
         thought-provoking quotes. Immerse yourself in the power of language, where every quote tells

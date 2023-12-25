@@ -74,7 +74,9 @@
             <Expand />
           </el-icon>
         </el-button>
-        <el-button link v-if="!userRef" @click="redirectTo('/login')">Login</el-button>
+        <el-button link v-if="!userRef" @click="redirectTo('/login')" type="primary"
+          >Login</el-button
+        >
         <span v-else>Welcome, {{ userRef.email }}</span>
         <Thememodeswitch />
       </el-row>

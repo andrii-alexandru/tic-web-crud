@@ -1,5 +1,7 @@
 # Ignore Firebase service account JSON file
 tic-web-crud-9d48e-firebase-adminsdk-gj9ov-f13848edeb.json
+firebaseConfig.js
+
 # Logs
 logs
 *.log
