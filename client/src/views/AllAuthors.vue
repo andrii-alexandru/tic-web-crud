@@ -41,7 +41,7 @@ import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getFirebaseIdToken } from '../components/utils/authUtils.js'
+import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditAuthorDialog from '@/components/EditAuthorDialog.vue'
 

@@ -1,10 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-var admin = require("firebase-admin");
+const admin = require("firebase-admin");
 const createQuoteRoute = require("./quoteRoutes");
 const createAuthorRoute = require("./authorRoutes");
-var serviceAccount = require("./tic-web-crud-9d48e-firebase-adminsdk-gj9ov-f13848edeb.json");
+const serviceAccount = require("./tic-web-crud-9d48e-firebase-adminsdk-gj9ov-f13848edeb.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

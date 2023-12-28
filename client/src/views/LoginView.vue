@@ -1,7 +1,12 @@
 <template>
-  <DefaultLayout>
+  <default_layout>
     <div class="login-container">
-      <el-card shadow="always" class="login-card" :body-style="{ padding: '40px' }">
+      <el-card
+        shadow="always"
+        class="login-card"
+        :body-style="{ padding: '40px' }"
+        v-loading="loading"
+      >
         <app_logo></app_logo>
 
         <h2 class="title">Sign In</h2>
@@ -51,54 +56,53 @@
         </el-row>
       </el-card>
     </div>
-  </DefaultLayout>
+  </default_layout>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import DefaultLayout from '../components/default_layout.vue'
-import app_logo from '../components/app_logo.vue'
 import { ElMessage } from 'element-plus'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import Default_layout from '@/components/default_layout.vue'
+import App_logo from '@/components/app_logo.vue'
 
+const store = useStore()
 const router = useRouter()
+const loading = ref(false)
 
 const loginData = ref({
   email: '',
   password: ''
 })
 
-const loginForm = ref(null)
-
 const loginRules = {
   email: [{ required: true, message: 'Please enter your email', trigger: 'blur' }],
   password: [{ required: true, message: 'Please enter your password', trigger: 'blur' }]
 }
 
-const login = () => {
-  loginForm.value.validate(async (valid) => {
-    let email = loginData.value.email
-    let password = loginData.value.password
-    if (valid) {
-      const auth = getAuth()
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          // Signed in
-          // const user = userCredential.user;
-          ElMessage({
-            message: 'Congrats, you logged in.',
-            type: 'success'
-          })
-          router.push('/my-account')
-        })
-        .catch((error) => {
-          ElMessage({
-            type: 'error',
-            message: error.message
-          })
-        })
-    }
+const login = async () => {
+  loading.value = true
+  await store.dispatch('signIn', {
+    email: loginData.value.email,
+    password: loginData.value.password
   })
+  loading.value = false
+
+  const authError = store.getters.authError
+  if (authError) {
+    ElMessage({
+      type: 'error',
+      message: authError
+    })
+    return
+  }
+
+  ElMessage({
+    message: 'Congrats, you logged in.',
+    type: 'success'
+  })
+
+  await router.push('/my-account')
 }
 </script>

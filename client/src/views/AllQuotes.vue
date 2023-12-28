@@ -13,6 +13,18 @@
               <span v-else></span>
             </template>
           </el-table-column>
+          <el-table-column fixed="left" label="Favorite" width="120">
+            <template #default="scope">
+              <el-switch
+                @change="updateFavorite(scope.row.id, scope.row.favorite)"
+                v-model="scope.row.favorite"
+                class="ml-2"
+                inline-prompt
+                style="--el-switch-on-color: #13ce66"
+                active-text="favorite"
+              />
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
@@ -43,7 +55,7 @@ import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { getFirestore, doc, collection, getDocs, getDoc } from 'firebase/firestore'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getFirebaseIdToken } from '../components/utils/authUtils.js'
+import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditQuoteDialog from '../components/EditQuoteDialog.vue'
 
@@ -136,6 +148,30 @@ const deleteQuote = async (quoteId) => {
       })
   } catch (error) {
     console.error('Error deleting quote: ', error)
+  }
+}
+
+const updateFavorite = async (quoteId, favorite) => {
+  try {
+    const idToken = await getFirebaseIdToken()
+    if (idToken === null) return
+
+    await axios.put(
+      `http://localhost:3000/update-favorite/${quoteId}`,
+      { favorite },
+      {
+        headers: {
+          Authorization: idToken
+        }
+      }
+    )
+
+    ElMessage({
+      type: 'success',
+      message: 'Favorite updated'
+    })
+  } catch (error) {
+    console.error('Error updating favorite: ', error)
   }
 }
 

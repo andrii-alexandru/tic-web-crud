@@ -4,39 +4,34 @@
       <el-card shadow="always" class="login-card">
         <app_logo></app_logo>
         <h2 class="title">Register</h2>
-        <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
-          <el-form-item prop="email" label="Email" rules="email" label-width="150px">
+        <el-form
+          ref="registerForm"
+          :model="registerData"
+          :rules="registerRules"
+          label-position="left"
+        >
+          <el-form-item prop="email" label="Email" label-width="150px">
             <el-input
-              v-model="loginData.email"
+              v-model="registerData.email"
               prefix-icon="message"
               placeholder="Email"
               size="large"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            prop="password"
-            label="Password"
-            rules="required|password"
-            label-width="150px"
-          >
+          <el-form-item prop="password" label="Password" label-width="150px">
             <el-input
               type="password"
-              v-model="loginData.password"
+              v-model="registerData.password"
               prefix-icon="lock"
               placeholder="Password"
               size="large"
               show-password
             ></el-input>
           </el-form-item>
-          <el-form-item
-            prop="checkPassword"
-            label="Confirm Password"
-            rules="required|confirmed:password"
-            label-width="150px"
-          >
+          <el-form-item prop="checkPassword" label="Confirm Password" label-width="150px">
             <el-input
               type="password"
-              v-model="loginData.checkPassword"
+              v-model="registerData.checkPassword"
               prefix-icon="lock"
               placeholder="Confirm Password"
               size="large"
@@ -67,29 +62,30 @@
 import app_logo from '../components/app_logo.vue'
 import default_layout from '../components/default_layout.vue'
 import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 const router = useRouter()
+const store = useStore()
 
-const loginData = ref({
+const registerData = ref({
   email: '',
   password: '',
   checkPassword: ''
 })
 
-const loginForm = ref(null)
+const registerForm = ref(null)
 
 const validatePasswordConfirmation = (rule, value, callback) => {
-  if (value === loginData.value.password) {
+  if (value === registerData.value.password) {
     callback()
   } else {
     callback(new Error('Passwords do not match'))
   }
 }
 
-const loginRules = {
+const registerRules = {
   email: [
     { required: true, message: 'Please enter your email', trigger: 'blur' },
     {
@@ -109,25 +105,29 @@ const loginRules = {
 }
 
 const register = () => {
-  loginForm.value.validate(async (valid) => {
-    let email = loginData.value.email
-    let password = loginData.value.password
+  registerForm.value.validate(async (valid) => {
+    let email = registerData.value.email
+    let password = registerData.value.password
     if (valid) {
-      const auth = getAuth()
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          ElMessage({
-            type: 'success',
-            message: 'Registration succesful!'
-          })
-          router.push('/')
+      await store.dispatch('register', {
+        email: email,
+        password: password
+      })
+
+      const authError = store.getters.authError
+      if (authError) {
+        ElMessage({
+          type: 'error',
+          message: authError
         })
-        .catch((error) => {
-          ElMessage({
-            type: 'error',
-            message: error.message
-          })
-        })
+        return
+      }
+
+      ElMessage({
+        type: 'success',
+        message: 'Registration successful!'
+      })
+      await router.push('/')
     }
   })
 }

@@ -26,15 +26,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import {
-  getStorage,
-  ref as storageRef,
-  getDownloadURL,
-  uploadBytes,
-  deleteObject
-} from 'firebase/storage'
+import {onMounted, ref} from 'vue'
+import {getAuth, onAuthStateChanged} from 'firebase/auth'
+import {deleteObject, getDownloadURL, getStorage, ref as storageRef, uploadBytes} from 'firebase/storage'
 
 const auth = getAuth()
 const storage = getStorage()
@@ -46,13 +40,8 @@ const profilePictureUrl = ref(null)
 const getProfilePictureUrl = async (userId) => {
   try {
     const storageFileRef = storageRef(storage, `profilePictures/${userId}/profilePicture.jpg`)
-    const url = await getDownloadURL(storageFileRef)
-    console.log('URL:', url)
-    profilePictureUrl.value = url
-    console.log('Profile picture URL:', profilePictureUrl)
+    profilePictureUrl.value = await getDownloadURL(storageFileRef)
   } catch (error) {
-    // Don't log the error; let the component handle it
-    console.error('Error getting profile picture URL:', error)
     profilePictureUrl.value = null
   }
 }
@@ -62,7 +51,7 @@ const beforeUpload = async (file) => {
   try {
     const storageFileRef = storageRef(storage, `profilePictures/${userId.value}/profilePicture.jpg`)
     await uploadBytes(storageFileRef, file)
-    getProfilePictureUrl(userId.value)
+    await getProfilePictureUrl(userId.value)
   } catch (error) {
     console.error('Error uploading profile picture:', error)
   }

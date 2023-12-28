@@ -91,14 +91,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Thememodeswitch from './ThemeModeSwitch.vue'
-import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
+import {useStore} from "vuex";
 
 const router = useRouter()
 const auth = getAuth()
 const userRef = ref(null)
+const store = useStore()
 
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
@@ -108,21 +110,22 @@ onMounted(() => {
 
 const aside_visible = ref(false)
 
-const logout = function () {
-  signOut(auth)
-    .then(() => {
-      ElMessage({
-        message: 'You logged out.',
-        type: 'info'
-      })
-      router.push('/')
+const logout = async function () {
+  await store.dispatch('signOut')
+
+  if(store.getters.authError) {
+    ElMessage({
+      type: 'error',
+      message: store.getters.authError
     })
-    .catch((error) => {
-      ElMessage({
-        type: 'error',
-        message: error.message
-      })
-    })
+    return
+  }
+
+  ElMessage({
+    message: 'You logged out.',
+    type: 'info'
+  })
+  await router.push('/')
 }
 
 const redirectTo = function (path) {
@@ -208,7 +211,7 @@ const generateRandomQuotes = function () {
     })
 }
 const getFirebaseIdToken = async () => {
-  const userRef = auth.currentUser
+  const userRef = store.getters.currentUser
 
   if (userRef) {
     return await userRef.getIdToken()
