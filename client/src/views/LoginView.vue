@@ -99,6 +99,7 @@ const login = async () => {
   }
 
   ElMessage({
+    showClose: true,
     message: 'Congrats, you logged in.',
     type: 'success'
   })

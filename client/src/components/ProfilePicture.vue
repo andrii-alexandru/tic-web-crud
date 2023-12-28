@@ -6,7 +6,7 @@
       :before-upload="beforeUpload"
       v-if="!profilePictureUrl"
     >
-      <el-button type="text">upload profile picture</el-button>
+      <el-button link>upload profile picture</el-button>
     </el-upload>
 
     <template v-else>

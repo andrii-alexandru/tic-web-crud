@@ -5,15 +5,18 @@
         <h2 class="title">All Quotes</h2>
         <el-table :data="filteredQuotes" style="width: 100%" v-loading="loading">
           <el-table-column label="Author" prop="author" sortable></el-table-column>
-          <el-table-column label="Quote Body" prop="body"></el-table-column>
-          <el-table-column label="Book or Reference" prop="bookReference"></el-table-column>
+          <el-table-column label="Quote Body" prop="body" width="600"></el-table-column>
+          <el-table-column label="Reference" prop="bookReference"></el-table-column>
           <el-table-column label="Significant" prop="significant">
             <template #default="scope">
               <el-tag v-if="scope.row.significant" type="success">Significant</el-tag>
               <span v-else></span>
             </template>
           </el-table-column>
-          <el-table-column fixed="left" label="Favorite" width="120">
+          <el-table-column fixed="left" v-if="!!userRef">
+            <template #header>
+              <el-icon :size="15"><StarFilled /></el-icon>
+            </template>
             <template #default="scope">
               <el-switch
                 @change="updateFavorite(scope.row.id, scope.row.favorite)"
@@ -21,7 +24,7 @@
                 class="ml-2"
                 inline-prompt
                 style="--el-switch-on-color: #13ce66"
-                active-text="favorite"
+                active-text="❤️❤️"
               />
             </template>
           </el-table-column>
@@ -54,10 +57,11 @@
 import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { getFirestore, doc, collection, getDocs, getDoc } from 'firebase/firestore'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditQuoteDialog from '../components/EditQuoteDialog.vue'
+import {getAuth, onAuthStateChanged} from "firebase/auth";
 
 const quotes = ref([])
 const filteredQuotes = ref([])
@@ -76,7 +80,6 @@ const fetchQuotes = async () => {
 
         if (quoteData.author) {
           const authorId = quoteData.author
-          console.log('authorId: ', authorId)
 
           const authorRef = doc(db, 'authors', authorId)
           const authorDoc = await getDoc(authorRef)
@@ -156,7 +159,7 @@ const updateFavorite = async (quoteId, favorite) => {
     const idToken = await getFirebaseIdToken()
     if (idToken === null) return
 
-    await axios.put(
+    const response = await axios.put(
       `http://localhost:3000/update-favorite/${quoteId}`,
       { favorite },
       {
@@ -166,16 +169,25 @@ const updateFavorite = async (quoteId, favorite) => {
       }
     )
 
-    ElMessage({
-      type: 'success',
-      message: 'Favorite updated'
+    if(response.data.error) throw new Error(response.data.error)
+
+    ElNotification({
+      title: 'Favorite updated',
+      message: "You've updated the quote favorite status to " + favorite,
+      position: 'bottom-right',
     })
+
   } catch (error) {
     console.error('Error updating favorite: ', error)
   }
 }
 
+const userRef = ref(null)
+
 onMounted(() => {
+  onAuthStateChanged(getAuth(), (user) => {
+    userRef.value = user
+  })
   fetchQuotes()
 })
 </script>

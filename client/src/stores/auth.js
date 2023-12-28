@@ -41,6 +41,7 @@ export const authStore = createStore({
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
         const user = userCredential.user
         commit('setUser', user)
+        console.log(user)
       } catch (error) {
         commit('setError', error.message)
       }

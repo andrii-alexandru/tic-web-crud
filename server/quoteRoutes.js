@@ -115,6 +115,29 @@ const createQuoteRoute = (admin) => {
     }
   });
 
+  router.put('/update-favorite/:id', authenticateUser, async (req, res) => {
+    try{
+      const quoteId = req.params.id;
+      const favorite = req.body.favorite;
+      const quoteRef = quotesCollection.doc(quoteId);
+      const doc = await quoteRef.get();
+
+      if (!doc.exists) {
+        res.status(404).json({ message: "Could not find a quote with this referance." });
+        return;
+      }
+
+      await quoteRef.update({
+        favorite: favorite,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      res.status(200).json({ message: "Favorite status updated." });
+    } catch (error) {
+      console.error("Error updating quote:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   return router;
 };
 
