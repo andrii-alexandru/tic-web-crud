@@ -2,7 +2,12 @@
   <DefaultLayout>
     <div class="author-list-container">
       <el-card shadow="always" class="author-list-card">
-        <h2 class="title">All Authors</h2>
+        <el-row>
+          <el-text size="large" tag="b" type="primary">ALL AUTHORS</el-text>
+          <el-button class="mx-10" circle @click="() => router.push('/create-author')"><el-icon><Plus /></el-icon> </el-button>
+        </el-row>
+        <el-divider></el-divider>
+
         <el-table :data="filteredAuthors" style="width: 100%" v-loading="loading">
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
@@ -44,6 +49,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditAuthorDialog from '@/components/edit_author_dialog.vue'
+import router from "@/router";
 
 const authors = ref([])
 const filteredAuthors = ref([])

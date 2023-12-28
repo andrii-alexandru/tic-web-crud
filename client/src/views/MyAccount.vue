@@ -47,7 +47,7 @@
         <el-row justify="center">
           <el-form-item>
             <el-button type="primary" class="login-button" @click="editAccount" size="large"
-              >Edit account</el-button
+              plain >Edit account</el-button
             >
           </el-form-item>
         </el-row>

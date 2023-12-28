@@ -37,8 +37,8 @@
               </el-menu-item-group>
               <el-menu-item-group>
                 <template #title>Quotes section</template>
-                <el-menu-item index="2-1" @click="redirectTo('/quotes')"> All quotes </el-menu-item>
-                <el-menu-item index="2-2" @click="redirectTo('/create-quote')">
+                <el-menu-item index="2-3" @click="redirectTo('/quotes')"> All quotes </el-menu-item>
+                <el-menu-item index="2-4" @click="redirectTo('/create-quote')">
                   Create quote
                 </el-menu-item>
               </el-menu-item-group>
@@ -77,7 +77,7 @@
         <el-button link v-if="!userRef" @click="redirectTo('/login')" type="primary"
           >Login</el-button
         >
-        <span v-else>Welcome, {{ userRef.email }}</span>
+        <el-text type="info" v-else>Welcome, {{ userRef.email }}</el-text>
         <Thememodeswitch />
       </el-row>
     </el-header>
@@ -129,6 +129,7 @@ const logout = async function () {
 }
 
 const redirectTo = function (path) {
+  if(path === router.currentRoute.value.path) aside_visible.value = false
   router.push(path)
 }
 

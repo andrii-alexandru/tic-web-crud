@@ -1,11 +1,3 @@
-.title {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 20px 0px;
-  color: var(--el-color-primary-light-3);
-  text-transform: uppercase;
-}
-
 .login-container {
   width: 100%;
   height: 100%;

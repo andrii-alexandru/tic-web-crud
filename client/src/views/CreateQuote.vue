@@ -88,7 +88,7 @@ const quoteData = ref({
   body: '',
   bookReference: '',
   significant: false,
-  favorite: false
+  favorite: []
 })
 
 const authors = ref([])
