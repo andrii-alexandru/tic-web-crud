@@ -90,7 +90,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import Thememodeswitch from './ThemeModeSwitch.vue'
+import Thememodeswitch from './theme_mode_switch.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'

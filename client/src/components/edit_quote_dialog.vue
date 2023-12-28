@@ -66,7 +66,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
-import AddAuthorDialog from '../components/AddAuthorDialog.vue'
+import AddAuthorDialog from './add_author_dialog.vue'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'

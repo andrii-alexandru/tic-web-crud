@@ -79,6 +79,7 @@ const createQuoteRoute = (admin) => {
   router.post("/generate-random-quotes", authenticateUser, async (req, res) => {
     try {
       const userId = req.user.uid;
+      const userEmail = req.user.email;
 
       const authorsCollection = admin.firestore().collection("authors");
       const authors = await authorsCollection.get();
@@ -95,6 +96,7 @@ const createQuoteRoute = (admin) => {
           bookReference: faker.lorem.words(),
           significant: faker.datatype.boolean(),
           userId,
+          userEmail,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
         };
       });

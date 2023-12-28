@@ -39,7 +39,7 @@ import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
-import NationalitiesDropdown from '../components/NationalitiesDropdown.vue'
+import NationalitiesDropdown from './nationalities_dropdown.vue'
 
 const authorProp = defineProps({
   author: Object

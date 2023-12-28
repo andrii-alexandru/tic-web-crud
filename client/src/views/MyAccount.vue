@@ -62,7 +62,7 @@ import { getAuth, onAuthStateChanged, updateEmail, updatePassword } from 'fireba
 import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
-import ProfilePicture from '../components/ProfilePicture.vue'
+import ProfilePicture from '../components/profile_picture.vue'
 
 const router = useRouter()
 

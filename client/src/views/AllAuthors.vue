@@ -43,7 +43,7 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
-import EditAuthorDialog from '@/components/EditAuthorDialog.vue'
+import EditAuthorDialog from '@/components/edit_author_dialog.vue'
 
 const authors = ref([])
 const filteredAuthors = ref([])

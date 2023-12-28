@@ -63,7 +63,7 @@ import DefaultLayout from '../components/default_layout.vue'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
-import NationalitiesDropdown from '../components/NationalitiesDropdown.vue'
+import NationalitiesDropdown from '../components/nationalities_dropdown.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()

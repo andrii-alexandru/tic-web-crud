@@ -56,11 +56,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
-import { getFirestore, doc, collection, getDocs, getDoc } from 'firebase/firestore'
+import { getFirestore, doc, collection, getDocs, getDoc, query, orderBy } from 'firebase/firestore'
 import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
-import EditQuoteDialog from '../components/EditQuoteDialog.vue'
+import EditQuoteDialog from '../components/edit_quote_dialog.vue'
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 
 const quotes = ref([])
@@ -72,7 +72,8 @@ const pageSize = ref(3) // Set to 3 to display 3 quotes per page
 const fetchQuotes = async () => {
   try {
     const db = getFirestore()
-    const querySnapshot = await getDocs(collection(db, 'quotes'))
+    const sortedQuery = query(collection(db, 'quotes'), orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(sortedQuery)
 
     quotes.value = await Promise.all(
       querySnapshot.docs.map(async (document) => {

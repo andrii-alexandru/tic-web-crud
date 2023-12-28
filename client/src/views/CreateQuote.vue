@@ -79,7 +79,7 @@ import { useRouter } from 'vue-router'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import axios from 'axios'
-import AddAuthorDialog from '../components/AddAuthorDialog.vue'
+import AddAuthorDialog from '../components/add_author_dialog.vue'
 
 const router = useRouter()
 
