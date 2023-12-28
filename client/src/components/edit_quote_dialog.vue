@@ -51,6 +51,10 @@
           <el-switch v-model="quoteData.significant" />
         </el-form-item>
       </el-form>
+
+      <template v-if="quoteData.userEmail">
+        <el-divider content-position="right"><el-text size="small" type="primary">created by <el-text size="small" type="primary" tag="ins">{{quoteData.userEmail}}</el-text></el-text></el-divider>
+      </template>
       <template #footer>
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="primary" @click="editQuote">Edit</el-button>
@@ -82,7 +86,8 @@ const quoteData = ref({
   author: '',
   body: '',
   bookReference: '',
-  significant: false
+  significant: false,
+  userEmail: ''
 })
 
 const quoteRules = {
@@ -146,5 +151,7 @@ const editQuote = async () => {
 onMounted(() => {
   fetchAuthors()
   quoteData.value = quoteProp.quote
+
+  console.log(quoteData.value.userEmail)
 })
 </script>
