@@ -39,9 +39,7 @@
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" class="login-button" @click="login" size="large" round
-                >Log In</el-button
-              >
+              <el-button type="primary" @click="login" size="large" round>Log In</el-button>
             </el-form-item>
           </el-row>
         </el-form>
@@ -86,33 +84,30 @@ const login = async () => {
   loading.value = true
 
   await loginForm.value.validate(async (valid) => {
-    if (!valid) {
-      loading.value = false
-      return
+    if (valid) {
+      await store.dispatch('signIn', {
+        email: loginData.value.email,
+        password: loginData.value.password
+      })
+
+      const authError = store.getters.authError
+      if (authError) {
+        ElMessage({
+          type: 'error',
+          message: authError
+        })
+        return
+      }
+      ElMessage({
+        showClose: true,
+        message: 'Congrats, you logged in.',
+        type: 'success'
+      })
+
+      await router.push('/my-account')
     }
   })
 
-  await store.dispatch('signIn', {
-    email: loginData.value.email,
-    password: loginData.value.password
-  })
   loading.value = false
-
-  const authError = store.getters.authError
-  if (authError) {
-    ElMessage({
-      type: 'error',
-      message: authError
-    })
-    return
-  }
-
-  ElMessage({
-    showClose: true,
-    message: 'Congrats, you logged in.',
-    type: 'success'
-  })
-
-  await router.push('/my-account')
 }
 </script>
