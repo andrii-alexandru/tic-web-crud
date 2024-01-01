@@ -1,0 +1,108 @@
+<template>
+  <default_layout>
+    <el-row justify="center">
+      <el-text size="large" tag="b" type="primary">FAVORITES</el-text>
+    </el-row>
+    <el-divider></el-divider>
+    <div v-if="userRef === null">
+      <el-alert
+        title="Not logged in"
+        description="You have to log in in order to view favorite quotes."
+        type="error"
+        show-icon
+      />
+    </div>
+    <div>
+      <el-card shadow="always" v-loading="loading">
+        <el-table :data="quotes" style="width: 100%" v-loading="loading">
+          <el-table-column
+            label="Author Name"
+            prop="authorName"
+            sortable
+            width="150"
+          ></el-table-column>
+          <el-table-column label="Quote Body" prop="body"></el-table-column>
+          <el-table-column fixed="right" label="Operations" width="120">
+            <template #default="scope">
+              <el-popconfirm
+                title="Remove from favorites?"
+                width="250"
+                confirm-button-type="danger"
+              >
+                <template #reference>
+                  <el-button
+                    link
+                    type="danger"
+                    size="small"
+                    @click="removeFavoriteQuote(scope.row.id)"
+                    >Remove</el-button
+                  >
+                </template>
+              </el-popconfirm>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </div>
+  </default_layout>
+</template>
+
+<script setup>
+import default_layout from '../components/default_layout.vue'
+import { ref, onMounted } from 'vue'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore, collection, getDocs, query, orderBy } from 'firebase/firestore'
+
+const userRef = ref(null)
+const quotes = ref([])
+const loading = ref(true)
+
+const fetchQuotes = async () => {
+  try {
+    const db = getFirestore()
+    const sortedQuery = query(collection(db, 'quotes'), orderBy('createdAt', 'desc'))
+    const querySnapshot = await getDocs(sortedQuery)
+
+    quotes.value = querySnapshot.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id }
+    })
+
+    //filter qutoes
+    quotes.value = quotes.value.filter((quote) => {
+      const userId = userRef.value.uid || null
+
+      if (Array.isArray(quote.favorite) && quote.favorite.length > 0) {
+        return quote.favorite.includes(userId)
+      }
+
+      return false
+    })
+
+    loading.value = false
+  } catch (error) {
+    console.error('Error fetching quotes: ', error)
+  }
+}
+
+const removeFavoriteQuote = async (quoteId) => {
+  try {
+    const db = getFirestore()
+    const quoteRef = collection(db, 'quotes').doc(quoteId)
+
+    await quoteRef.update({
+      favorite: []
+    })
+
+    await fetchQuotes()
+  } catch (error) {
+    console.error('Error removing favorite quote: ', error)
+  }
+}
+
+onMounted(() => {
+  onAuthStateChanged(getAuth(), (user) => {
+    userRef.value = user
+  })
+  fetchQuotes()
+})
+</script>

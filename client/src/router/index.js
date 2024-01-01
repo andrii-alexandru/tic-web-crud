@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('../views/MyAccount.vue')
     },
     {
+      path: '/favorites',
+      name: 'favorites',
+      component: () => import('../views/FavoritesQuotes.vue')
+    },
+    {
       path: '/quotes',
       name: 'quotes',
       component: () => import('../views/AllQuotes.vue')

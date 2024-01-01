@@ -4,7 +4,9 @@
       <el-card shadow="always" class="quote-list-card">
         <el-row>
           <el-text size="large" tag="b" type="primary">ALL QUOTES</el-text>
-          <el-button class="mx-10" circle @click="() => router.push('/create-quote')"><el-icon><Plus /></el-icon> </el-button>
+          <el-button class="mx-10" circle @click="() => router.push('/create-quote')"
+            ><el-icon><Plus /></el-icon>
+          </el-button>
         </el-row>
         <el-divider></el-divider>
 
@@ -36,7 +38,7 @@
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
-              <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)"
+              <el-button link type="danger" size="small" @click="deleteQuote(scope.row.id)"
                 >Delete</el-button
               >
             </template>
@@ -67,7 +69,7 @@ import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditQuoteDialog from '../components/edit_quote_dialog.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import router from "@/router";
+import router from '@/router'
 
 const quotes = ref([])
 const filteredQuotes = ref([])
@@ -103,9 +105,9 @@ const fetchQuotes = async () => {
     )
 
     quotes.value.map((quote) => {
-      const userId = userRef.value.uid || null;
-      quote.isFavorite = quote.favorite ? quote.favorite.includes(userId) : false;
-    });
+      const userId = userRef.value.uid || null
+      quote.isFavorite = quote.favorite ? quote.favorite.includes(userId) : false
+    })
 
     loading.value = false
     updateFilteredQuotes()

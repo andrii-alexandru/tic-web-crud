@@ -95,7 +95,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
-import {useStore} from "vuex";
+import { useStore } from 'vuex'
 
 const router = useRouter()
 const auth = getAuth()
@@ -113,7 +113,7 @@ const aside_visible = ref(false)
 const logout = async function () {
   await store.dispatch('signOut')
 
-  if(store.getters.authError) {
+  if (store.getters.authError) {
     ElMessage({
       type: 'error',
       message: store.getters.authError
@@ -129,7 +129,7 @@ const logout = async function () {
 }
 
 const redirectTo = function (path) {
-  if(path === router.currentRoute.value.path) aside_visible.value = false
+  if (path === router.currentRoute.value.path) aside_visible.value = false
   router.push(path)
 }
 

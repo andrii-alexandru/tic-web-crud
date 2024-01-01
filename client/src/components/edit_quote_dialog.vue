@@ -11,7 +11,12 @@
     >
       <el-form :model="quoteData" :rules="quoteRules" ref="quoteForm" label-position="top">
         <el-form-item prop="author" label="Author">
-          <el-select v-model="quoteData.author" placeholder="Select Author" size="large">
+          <el-select
+            v-model="quoteData.author"
+            placeholder="Select Author"
+            size="large"
+            @change="updateAuthorName"
+          >
             <el-option
               v-for="author in authors"
               :key="author.id"
@@ -53,7 +58,14 @@
       </el-form>
 
       <template v-if="quoteData.userEmail">
-        <el-divider content-position="right"><el-text size="small" type="primary">created by <el-text size="small" type="primary" tag="ins">{{quoteData.userEmail}}</el-text></el-text></el-divider>
+        <el-divider content-position="right"
+          ><el-text size="small" type="primary"
+            >created by
+            <el-text size="small" type="primary" tag="ins">{{
+              quoteData.userEmail
+            }}</el-text></el-text
+          ></el-divider
+        >
       </template>
       <template #footer>
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -84,6 +96,7 @@ const quoteForm = ref(null)
 const quoteData = ref({
   id: '',
   author: '',
+  authorName: '',
   body: '',
   bookReference: '',
   significant: false,
@@ -146,6 +159,11 @@ const editQuote = async () => {
       return false
     }
   })
+}
+
+const updateAuthorName = () => {
+  const author = authors.value.find((author) => author.id === quoteData.value.author)
+  quoteData.value.authorName = author.name
 }
 
 onMounted(() => {

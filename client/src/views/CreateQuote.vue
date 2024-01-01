@@ -11,7 +11,12 @@
           class="quote-form"
         >
           <el-form-item prop="author" label="Author">
-            <el-select v-model="quoteData.author" placeholder="Select Author" size="large">
+            <el-select
+              v-model="quoteData.author"
+              placeholder="Select Author"
+              size="large"
+              @change="updateAuthorName"
+            >
               <el-option
                 v-for="author in authors"
                 :key="author.id"
@@ -84,7 +89,8 @@ import AddAuthorDialog from '../components/add_author_dialog.vue'
 const router = useRouter()
 
 const quoteData = ref({
-  author: '', // Now it stores the ID of the selected author
+  author: '',
+  authorName: '',
   body: '',
   bookReference: '',
   significant: false,
@@ -149,7 +155,11 @@ const fetchAuthors = async () => {
   }
 }
 
-// Fetch authors on component mount
+const updateAuthorName = () => {
+  const author = authors.value.find((author) => author.id === quoteData.value.author)
+  quoteData.value.authorName = author.name
+}
+
 onMounted(() => {
   fetchAuthors()
 })
