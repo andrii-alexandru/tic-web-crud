@@ -121,10 +121,6 @@ const logout = async function () {
     return
   }
 
-  ElMessage({
-    message: 'You logged out.',
-    type: 'info'
-  })
   await router.push('/')
 }
 

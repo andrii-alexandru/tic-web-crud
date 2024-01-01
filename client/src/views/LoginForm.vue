@@ -70,6 +70,7 @@ import App_logo from '@/components/app_logo.vue'
 const store = useStore()
 const router = useRouter()
 const loading = ref(false)
+const loginForm = ref(null)
 
 const loginData = ref({
   email: '',
@@ -83,6 +84,14 @@ const loginRules = {
 
 const login = async () => {
   loading.value = true
+
+  await loginForm.value.validate(async (valid) => {
+    if (!valid) {
+      loading.value = false
+      return
+    }
+  })
+
   await store.dispatch('signIn', {
     email: loginData.value.email,
     password: loginData.value.password

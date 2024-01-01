@@ -52,6 +52,9 @@ import default_layout from '../components/default_layout.vue'
 import { ref, onMounted } from 'vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDocs, query, orderBy } from 'firebase/firestore'
+import { getFirebaseIdToken } from '@/components/utils/authUtils'
+import axios from 'axios'
+import { ElNotification } from 'element-plus'
 
 const userRef = ref(null)
 const quotes = ref([])
@@ -86,11 +89,25 @@ const fetchQuotes = async () => {
 
 const removeFavoriteQuote = async (quoteId) => {
   try {
-    const db = getFirestore()
-    const quoteRef = collection(db, 'quotes').doc(quoteId)
+    const idToken = await getFirebaseIdToken()
+    if (idToken === null) return
 
-    await quoteRef.update({
-      favorite: []
+    const response = await axios.put(
+      `http://localhost:3000/update-favorite/${quoteId}`,
+      {},
+      {
+        headers: {
+          Authorization: idToken
+        }
+      }
+    )
+
+    if (response.data.error) throw new Error(response.data.error)
+
+    ElNotification({
+      title: 'Favorite removed',
+      message: 'Removed from favorites.',
+      position: 'bottom-right'
     })
 
     await fetchQuotes()

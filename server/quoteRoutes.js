@@ -127,15 +127,15 @@ const createQuoteRoute = (admin) => {
 
       if (!doc.exists) {
         res
-            .status(404)
-            .json({ message: "Could not find a quote with this reference." });
+          .status(404)
+          .json({ message: "Could not find a quote with this reference." });
         return;
       }
 
       const existingFavorite = doc.data().favorite || [];
       const updatedFavorite = existingFavorite.includes(userId)
-          ? existingFavorite.filter((id) => id !== userId)
-          : [...existingFavorite, userId];
+        ? existingFavorite.filter((id) => id !== userId)
+        : [...existingFavorite, userId];
 
       await quoteRef.update({
         favorite: updatedFavorite,
@@ -149,6 +149,34 @@ const createQuoteRoute = (admin) => {
     }
   });
 
+  router.put("/delete-favorite/:id", authenticateUser, async (req, res) => {
+    try {
+      const quoteId = req.params.id;
+      const userId = req.user.uid;
+      const quoteRef = quotesCollection.doc(quoteId);
+      const doc = await quoteRef.get();
+
+      if (!doc.exists) {
+        res
+          .status(404)
+          .json({ message: "Could not find a quote with this reference." });
+        return;
+      }
+
+      const existingFavorite = doc.data().favorite || [];
+      const updatedFavorite = existingFavorite.filter((id) => id !== userId);
+
+      await quoteRef.update({
+        favorite: updatedFavorite,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      res.status(200).json({ message: "Favorite status updated." });
+    } catch (error) {
+      console.error("Error updating quote:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
 
   return router;
 };
