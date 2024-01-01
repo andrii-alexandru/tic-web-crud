@@ -1,5 +1,5 @@
 <template>
-  <default_layout>
+  <default-layout>
     <div class="login-container">
       <el-card
         shadow="always"
@@ -11,13 +11,7 @@
 
         <h2 class="title">Sign In</h2>
 
-        <el-form
-          ref="loginForm"
-          :model="loginData"
-          :rules="loginRules"
-          label-position="left"
-          @keyup.enter="login"
-        >
+        <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
           <el-form-item prop="email" label="Email" label-width="150px">
             <el-input
               v-model="loginData.email"
@@ -54,7 +48,7 @@
         </el-row>
       </el-card>
     </div>
-  </default_layout>
+  </default-layout>
 </template>
 
 <script setup>
@@ -62,7 +56,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import Default_layout from '@/components/default_layout.vue'
+import DefaultLayout from '@/components/default_layout.vue'
 import App_logo from '@/components/app_logo.vue'
 
 const store = useStore()
