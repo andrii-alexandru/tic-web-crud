@@ -7,9 +7,9 @@
         :body-style="{ padding: '40px' }"
         v-loading="loading"
       >
-        <app_logo></app_logo>
+        <app-logo></app-logo>
 
-        <h2 class="title">Sign In</h2>
+        <h2 class="title">Login</h2>
 
         <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
           <el-form-item prop="email" label="Email" label-width="150px">
@@ -33,7 +33,7 @@
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" @click="login" size="large" round>Log In</el-button>
+              <el-button type="primary" @click="login" size="large" round>Login</el-button>
             </el-form-item>
           </el-row>
         </el-form>
@@ -53,16 +53,14 @@
 
 <script setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 import DefaultLayout from '@/components/default_layout.vue'
-import App_logo from '@/components/app_logo.vue'
+import AppLogo from '@/components/app_logo.vue'
+import { signIn } from '@/components/utils/authUtils'
+import { useRouter } from 'vue-router'
 
-const store = useStore()
-const router = useRouter()
 const loading = ref(false)
 const loginForm = ref(null)
+const router = useRouter()
 
 const loginData = ref({
   email: '',
@@ -79,26 +77,8 @@ const login = async () => {
 
   await loginForm.value.validate(async (valid) => {
     if (valid) {
-      await store.dispatch('signIn', {
-        email: loginData.value.email,
-        password: loginData.value.password
-      })
-
-      const authError = store.getters.authError
-      if (authError) {
-        ElMessage({
-          type: 'error',
-          message: authError
-        })
-        return
-      }
-      ElMessage({
-        showClose: true,
-        message: 'Congrats, you logged in.',
-        type: 'success'
-      })
-
-      await router.push('/my-account')
+      const success = signIn(loginData.value.email, loginData.value.password)
+      if (success) router.push('/my-account')
     }
   })
 

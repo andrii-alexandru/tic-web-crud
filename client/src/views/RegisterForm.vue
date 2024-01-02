@@ -41,7 +41,12 @@
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" class="login-button" @click="register" size="large" round
+              <el-button
+                type="primary"
+                class="login-button"
+                @click="registerUser"
+                size="large"
+                round
                 >Register</el-button
               >
             </el-form-item>
@@ -62,12 +67,10 @@
 import app_logo from '../components/app_logo.vue'
 import default_layout from '../components/default_layout.vue'
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { register } from '@/components/utils/authUtils'
 
 const router = useRouter()
-const store = useStore()
 
 const registerData = ref({
   email: '',
@@ -104,30 +107,13 @@ const registerRules = {
   ]
 }
 
-const register = () => {
+const registerUser = () => {
   registerForm.value.validate(async (valid) => {
     let email = registerData.value.email
     let password = registerData.value.password
     if (valid) {
-      await store.dispatch('register', {
-        email: email,
-        password: password
-      })
-
-      const authError = store.getters.authError
-      if (authError) {
-        ElMessage({
-          type: 'error',
-          message: authError
-        })
-        return
-      }
-
-      ElMessage({
-        type: 'success',
-        message: 'Registration successful!'
-      })
-      await router.push('/')
+      const success = register(email, password)
+      if (success) await router.push('/my-account')
     }
   })
 }

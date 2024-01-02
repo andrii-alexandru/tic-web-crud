@@ -1,8 +1,13 @@
 import { ElMessage } from 'element-plus'
-import { getAuth } from 'firebase/auth'
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword
+} from 'firebase/auth'
 
-const auth = getAuth()
 export const getFirebaseIdToken = async () => {
+  const auth = getAuth()
   const user = auth.currentUser
 
   if (user) {
@@ -16,4 +21,48 @@ export const getFirebaseIdToken = async () => {
     })
     return null
   }
+}
+
+export const signIn = async (email, password) => {
+  const auth = getAuth()
+  try {
+    await signInWithEmailAndPassword(auth, email, password)
+    ElMessage({
+      type: 'success',
+      message: 'You have successfully logged in',
+      showClose: true
+    })
+    return true
+  } catch (error) {
+    return handleError(error)
+  }
+}
+
+export const signOutUser = async () => {
+  const auth = getAuth()
+  try {
+    await signOut(auth)
+    ElMessage('You have successfully logged out')
+  } catch (error) {
+    handleError(error)
+  }
+}
+
+export const register = async (email, password) => {
+  const auth = getAuth()
+  try {
+    await createUserWithEmailAndPassword(auth, email, password)
+  } catch (error) {
+    handleError(error)
+  }
+}
+
+function handleError(error) {
+  ElMessage({
+    type: 'error',
+    message: error.message,
+    showClose: true
+  })
+
+  return false
 }

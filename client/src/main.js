@@ -11,7 +11,7 @@ import App from './App.vue'
 import router from './router'
 import { initializeApp } from 'firebase/app'
 import firebaseConfig from '../firebaseConfig'
-import { authStore } from './stores/auth'
+import { loadingStore } from './stores/loading'
 
 initializeApp(firebaseConfig)
 
@@ -24,6 +24,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app.component(ElMessage)
 app.use(router)
-app.use(authStore)
+app.use(loadingStore)
 
 app.mount('#app')

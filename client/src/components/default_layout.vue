@@ -45,7 +45,7 @@
             </el-sub-menu>
             <el-sub-menu index="3">
               <template #title>
-                <el-icon><CirclePlus /></el-icon>Random data
+                <el-icon><CirclePlus /></el-icon>Faker data
               </template>
               <el-menu-item-group>
                 <template #title>Generate faker data (10 each)</template>
@@ -96,6 +96,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 import { useStore } from 'vuex'
+import { signOutUser } from '@/components/utils/authUtils'
 
 const router = useRouter()
 const auth = getAuth()
@@ -106,22 +107,14 @@ onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     userRef.value = user
   })
+
+  console.log(store.getters)
 })
 
 const aside_visible = ref(false)
 
 const logout = async function () {
-  await store.dispatch('signOut')
-
-  if (store.getters.authError) {
-    ElMessage({
-      type: 'error',
-      message: store.getters.authError
-    })
-    return
-  }
-
-  await router.push('/')
+  if (signOutUser()) redirectTo('/login')
 }
 
 const redirectTo = function (path) {

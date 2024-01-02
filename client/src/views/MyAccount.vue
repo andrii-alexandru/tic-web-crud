@@ -61,16 +61,16 @@ import DefaultLayout from '../components/default_layout.vue'
 import { getAuth, onAuthStateChanged, updateEmail, updatePassword } from 'firebase/auth'
 import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
-import { useRouter } from 'vue-router'
 import ProfilePicture from '../components/profile_picture.vue'
 
-const router = useRouter()
-
+const auth = getAuth()
+const user = auth.currentUser
 const disabledRef = ref(true)
 
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
+      newLoginData.value.email = user.email
       disabledRef.value = false
     } else {
       disabledRef.value = true
@@ -112,25 +112,6 @@ const accountRules = {
     { validator: validatePasswordConfirmation, trigger: 'blur' }
   ]
 }
-
-const auth = getAuth()
-const user = auth.currentUser
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    newLoginData.value.email = user.email
-  } else {
-    ElMessageBox.alert('You are not logged in.', 'Error', {
-      type: 'error',
-      confirmButtonText: 'Log in',
-      callback: async (action) => {
-        if (action === 'confirm') {
-          router.push('/login')
-        }
-      }
-    })
-  }
-})
 
 const editAccount = async () => {
   accountForm.value.validate(async (valid) => {
