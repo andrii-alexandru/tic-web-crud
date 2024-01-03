@@ -1,5 +1,5 @@
 <template>
-  <el-container class="layout-container-demo">
+  <el-container class="layout-container-demo" v-loading="loading">
     <el-drawer v-model="aside_visible" :show-close="true" direction="ltr" size="auto">
       <el-aside width="50vw">
         <el-scrollbar>
@@ -89,7 +89,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Thememodeswitch from './theme_mode_switch.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
@@ -103,12 +103,12 @@ const auth = getAuth()
 const userRef = ref(null)
 const store = useStore()
 
+const loading = computed(() => store.getters['isLoading'])
+
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     userRef.value = user
   })
-
-  console.log(store.getters)
 })
 
 const aside_visible = ref(false)
@@ -200,21 +200,6 @@ const generateRandomQuotes = function () {
       })
     })
 }
-// const getFirebaseIdToken = async () => {
-//   const userRef = store.getters.currentUser
-
-//   if (userRef) {
-//     return await userRef.getIdToken()
-//   } else {
-//     ElMessage({
-//       type: 'error',
-//       dangerouslyUseHTMLString: true, // Allow HTML in the message
-//       message: 'You must be <a href="/login">logged in</a> to perform this action',
-//       showClose: true
-//     })
-//     return null
-//   }
-// }
 </script>
 
 <style scoped>
