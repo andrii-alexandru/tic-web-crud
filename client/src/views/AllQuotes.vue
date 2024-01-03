@@ -11,16 +11,7 @@
         <el-divider></el-divider>
 
         <el-table :data="filteredQuotes" style="width: 100%" v-loading="loading">
-          <el-table-column label="Author" prop="author" sortable></el-table-column>
-          <el-table-column label="Quote Body" prop="body" width="600"></el-table-column>
-          <el-table-column label="Reference" prop="bookReference"></el-table-column>
-          <el-table-column label="Significant" prop="significant">
-            <template #default="scope">
-              <el-tag v-if="scope.row.significant" type="success">Significant</el-tag>
-              <span v-else></span>
-            </template>
-          </el-table-column>
-          <el-table-column fixed="left" v-if="!!userRef">
+          <el-table-column v-if="!!userRef">
             <template #header>
               <el-icon><Management /></el-icon>
             </template>
@@ -35,7 +26,16 @@
               />
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="Operations" width="120">
+          <el-table-column label="Author" prop="author" width="150" sortable></el-table-column>
+          <el-table-column label="Quote Body" prop="body" width="600"></el-table-column>
+          <el-table-column label="Reference" prop="bookReference" width="150"></el-table-column>
+          <el-table-column label="Significant" prop="significant" width="110">
+            <template #default="scope">
+              <el-tag v-if="scope.row.significant" type="success">Significant</el-tag>
+              <span v-else></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="Operations" width="120">
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
               <el-button link type="danger" size="small" @click="deleteQuote(scope.row.id)"
@@ -50,8 +50,8 @@
             :current-page="currentPage"
             @size-change="handlePageSizeChange"
             :page-size="pageSize"
-            :page-sizes="[3, 10, 20, 30, 40]"
-            layout="total, sizes, prev, pager, next, jumper"
+            :page-sizes="[5, 10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next"
             :total="quotes.length"
           />
         </el-row>
@@ -75,7 +75,7 @@ const quotes = ref([])
 const filteredQuotes = ref([])
 const loading = ref(true)
 const currentPage = ref(1)
-const pageSize = ref(3) // Set to 3 to display 3 quotes per page
+const pageSize = ref(5)
 
 const fetchQuotes = async () => {
   try {

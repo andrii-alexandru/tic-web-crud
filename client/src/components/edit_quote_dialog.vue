@@ -53,7 +53,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="Significant">
-          <el-switch v-model="quoteData.significant" />
+          <el-switch v-model="quoteData.significant" size="large" />
         </el-form-item>
       </el-form>
 
@@ -68,8 +68,8 @@
         >
       </template>
       <template #footer>
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="editQuote">Edit</el-button>
+        <el-button @click="dialogVisible = false" size="large">Cancel</el-button>
+        <el-button type="primary" @click="editQuote" size="large">Edit</el-button>
       </template>
     </el-dialog>
   </div>

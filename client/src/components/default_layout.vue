@@ -74,10 +74,17 @@
             <Expand />
           </el-icon>
         </el-button>
-        <el-button link v-if="!userRef" @click="redirectTo('/login')" type="primary"
+        <el-button
+          link
+          v-if="!userRef"
+          @click="redirectTo('/login')"
+          type="primary"
+          class="hidden-md-and-down"
           >Login</el-button
         >
-        <el-text type="info" v-else>Welcome, {{ userRef.email }}</el-text>
+        <el-text type="info" class="hidden-md-and-down" v-else
+          >Welcome, {{ userRef.email }}</el-text
+        >
         <Thememodeswitch />
       </el-row>
     </el-header>

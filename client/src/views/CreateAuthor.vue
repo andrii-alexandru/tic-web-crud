@@ -26,6 +26,7 @@
                   type="year"
                   placeholder="Pick a year"
                   size="large"
+                  style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
             </el-col>

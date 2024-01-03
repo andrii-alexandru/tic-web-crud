@@ -11,31 +11,33 @@
           class="quote-form"
         >
           <el-form-item prop="author" label="Author">
-            <el-select
-              v-model="quoteData.author"
-              placeholder="Select Author"
-              size="large"
-              @change="updateAuthorName"
-            >
-              <el-option
-                v-for="author in authors"
-                :key="author.id"
-                :label="author.name"
-                :value="author.id"
-              ></el-option>
-            </el-select>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <add-author-dialog
-              v-if="authors.length > 0"
-              :quoteData="quoteData"
-              :authors="authors"
-              :fetchAuthors="fetchAuthors"
-              @authorAdded="
-                () => {
-                  fetchAuthors()
-                }
-              "
-            />
+            <div class="inline-row">
+              <el-select
+                v-model="quoteData.author"
+                placeholder="Select Author"
+                size="large"
+                @change="updateAuthorName"
+                filterable
+              >
+                <el-option
+                  v-for="author in authors"
+                  :key="author.id"
+                  :label="author.name"
+                  :value="author.id"
+                ></el-option>
+              </el-select>
+              <add-author-dialog
+                v-if="authors.length > 0"
+                :quoteData="quoteData"
+                :authors="authors"
+                :fetchAuthors="fetchAuthors"
+                @authorAdded="
+                  () => {
+                    fetchAuthors()
+                  }
+                "
+              />
+            </div>
           </el-form-item>
           <el-form-item prop="body" label="Quote Body" label-width="150px">
             <el-input
@@ -46,13 +48,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item prop="bookReference" label="Book or Reference" label-width="150px">
-            <el-col :span="12">
-              <el-input
-                v-model="quoteData.bookReference"
-                placeholder="Book or Reference"
-                size="large"
-              ></el-input>
-            </el-col>
+            <el-input
+              v-model="quoteData.bookReference"
+              placeholder="Book or Reference"
+              size="large"
+            ></el-input>
           </el-form-item>
           <el-form-item label="Significant">
             <el-switch v-model="quoteData.significant" />
@@ -175,6 +175,13 @@ onMounted(() => {
 .quote-form-container .quote-form-card {
   width: 60vw;
   padding: 4rem;
+}
+
+.inline-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 @media screen and (max-width: 768px) {

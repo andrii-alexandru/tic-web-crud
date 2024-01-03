@@ -4,7 +4,9 @@
       <el-card shadow="always" class="author-list-card">
         <el-row>
           <el-text size="large" tag="b" type="primary">ALL AUTHORS</el-text>
-          <el-button class="mx-10" circle @click="() => router.push('/create-author')"><el-icon><Plus /></el-icon> </el-button>
+          <el-button class="mx-10" circle @click="() => router.push('/create-author')"
+            ><el-icon><Plus /></el-icon>
+          </el-button>
         </el-row>
         <el-divider></el-divider>
 
@@ -19,7 +21,7 @@
                 :author="scope.row"
                 @authorEdited="fetchAuthors"
               ></edit-author-dialog>
-              <el-button link type="primary" size="small" @click="deleteQuote(scope.row.id)"
+              <el-button link type="danger" size="small" @click="deleteQuote(scope.row.id)"
                 >Delete</el-button
               >
             </template>
@@ -31,8 +33,8 @@
             :current-page="currentPage"
             @size-change="handlePageSizeChange"
             :page-size="pageSize"
-            :page-sizes="[3, 10, 20, 30, 40]"
-            layout="total, sizes, prev, pager, next, jumper"
+            :page-sizes="[5, 10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next"
             :total="authors.length"
           />
         </el-row>
@@ -49,13 +51,13 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditAuthorDialog from '@/components/edit_author_dialog.vue'
-import router from "@/router";
+import router from '@/router'
 
 const authors = ref([])
 const filteredAuthors = ref([])
 const loading = ref(true)
 const currentPage = ref(1)
-const pageSize = ref(3) // Set to 3 to display 3 authors per page
+const pageSize = ref(5)
 
 const fetchAuthors = async () => {
   try {

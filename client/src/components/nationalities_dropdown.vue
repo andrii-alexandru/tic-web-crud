@@ -5,6 +5,7 @@
     filterable
     default-first-option
     @change="emitSelectedNationality"
+    style="width: 100%"
   >
     <el-option style="color: brown" value="Unknown"
       ><el-icon><QuestionFilled /></el-icon>

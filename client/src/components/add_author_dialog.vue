@@ -9,19 +9,35 @@
       v-model="dialogVisible"
       @close="resetForm"
       :append-to-body="true"
+      width="80vw"
     >
-      <el-form :model="authorData" :rules="newAuthorRules" ref="authorForm">
+      <el-form :model="authorData" :rules="newAuthorRules" ref="authorForm" label-position="top">
         <el-form-item prop="name" label="Author Name" class="form-item">
-          <el-input v-model="authorData.name" placeholder="Enter author name"></el-input>
+          <el-input
+            v-model="authorData.name"
+            placeholder="Enter author name"
+            size="large"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="birthDate" label="Birth Date" class="form-item">
-          <el-date-picker v-model="authorData.birthDate" type="year" placeholder="Pick a year" />
+          <el-date-picker
+            v-model="authorData.birthDate"
+            type="year"
+            placeholder="Pick a year"
+            style="width: 100%"
+            size="large"
+          />
         </el-form-item>
         <el-form-item prop="nationality" label="Nationality" class="form-item">
-          <el-input v-model="authorData.nationality" placeholder="Enter nationality"></el-input>
+          <!-- <el-input v-model="authorData.nationality" placeholder="Enter nationality"></el-input> -->
+          <nationalities-dropdown
+            @selected-nationality="
+              (selectedNationality) => (authorData.nationality = selectedNationality)
+            "
+          />
         </el-form-item>
         <el-form-item class="form-item">
-          <el-button type="primary" @click="addNewAuthor">Add Author</el-button>
+          <el-button type="primary" @click="addNewAuthor" size="large">Add Author</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -32,6 +48,7 @@
 import { ref } from 'vue'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import NationalitiesDropdown from '../components/nationalities_dropdown.vue'
 
 const emit = defineEmits(['authorAdded'])
 

@@ -12,7 +12,7 @@
         ref="accountForm"
         :model="newLoginData"
         :rules="accountRules"
-        label-position="left"
+        label-position="top"
         :disabled="disabledRef"
       >
         <el-form-item prop="email" label="Email" label-width="150px">
