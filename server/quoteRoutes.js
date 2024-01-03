@@ -88,10 +88,11 @@ const createQuoteRoute = (admin) => {
 
       const randomQuotes = Array.from({ length: 10 }, () => {
         const randomAuthor =
-          authors.docs[Math.floor(Math.random() * authors.docs.length)].id;
+          authors.docs[Math.floor(Math.random() * authors.docs.length)];
 
         return {
-          author: randomAuthor,
+          author: randomAuthor.id,
+          authorName: randomAuthor.data().name,
           body: faker.lorem.paragraph(),
           bookReference: faker.lorem.words(),
           significant: faker.datatype.boolean(),

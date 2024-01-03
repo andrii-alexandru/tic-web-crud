@@ -96,7 +96,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 import { useStore } from 'vuex'
-import { signOutUser } from '@/components/utils/authUtils'
+import { getFirebaseIdToken, signOutUser } from '@/components/utils/authUtils'
 
 const router = useRouter()
 const auth = getAuth()
@@ -200,21 +200,21 @@ const generateRandomQuotes = function () {
       })
     })
 }
-const getFirebaseIdToken = async () => {
-  const userRef = store.getters.currentUser
+// const getFirebaseIdToken = async () => {
+//   const userRef = store.getters.currentUser
 
-  if (userRef) {
-    return await userRef.getIdToken()
-  } else {
-    ElMessage({
-      type: 'error',
-      dangerouslyUseHTMLString: true, // Allow HTML in the message
-      message: 'You must be <a href="/login">logged in</a> to perform this action',
-      showClose: true
-    })
-    return null
-  }
-}
+//   if (userRef) {
+//     return await userRef.getIdToken()
+//   } else {
+//     ElMessage({
+//       type: 'error',
+//       dangerouslyUseHTMLString: true, // Allow HTML in the message
+//       message: 'You must be <a href="/login">logged in</a> to perform this action',
+//       showClose: true
+//     })
+//     return null
+//   }
+// }
 </script>
 
 <style scoped>
