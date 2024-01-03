@@ -11,10 +11,20 @@
     >
       <el-form :model="authorData" :rules="authorRules" ref="authorForm" label-position="top">
         <el-form-item prop="name" label="Author Name" class="form-item">
-          <el-input v-model="authorData.name" placeholder="Enter author name"></el-input>
+          <el-input
+            v-model="authorData.name"
+            placeholder="Enter author name"
+            size="large"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="birthDate" label="Birth Date" class="form-item">
-          <el-date-picker v-model="authorData.birthDate" type="year" placeholder="Pick a year" />
+          <el-date-picker
+            v-model="authorData.birthDate"
+            type="year"
+            placeholder="Pick a year"
+            size="large"
+            style="width: 100%"
+          />
         </el-form-item>
         <el-form-item prop="nationality" label="Nationality" class="form-item">
           <nationalities-dropdown
@@ -26,8 +36,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="editQuote">Edit</el-button>
+        <el-button @click="dialogVisible = false" size="large">Cancel</el-button>
+        <el-button type="primary" @click="editQuote" size="large">Edit</el-button>
       </template>
     </el-dialog>
   </div>
