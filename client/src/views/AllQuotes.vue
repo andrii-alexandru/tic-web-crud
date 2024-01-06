@@ -153,7 +153,7 @@ const deleteQuote = async (quoteId) => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        await axios.delete(`http://localhost:3000/delete-quote/${quoteId}`, {
+        await axios.delete(`https://quotes.andrii.ro/api/delete-quote/${quoteId}`, {
           headers: {
             Authorization: idToken
           }
@@ -185,7 +185,7 @@ const updateFavorite = async (quoteId, isFavorite) => {
     if (idToken === null) return
 
     const response = await axios.put(
-      `http://localhost:3000/update-favorite/${quoteId}`,
+      `https://quotes.andrii.ro/api/update-favorite/${quoteId}`,
       { isFavorite },
       {
         headers: {

@@ -119,7 +119,7 @@ const deleteQuote = async (authorId) => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        await axios.delete(`http://localhost:3000/delete-author/${authorId}`, {
+        await axios.delete(`https://quotes.andrii.ro/api/delete-author/${authorId}`, {
           headers: {
             Authorization: idToken
           }

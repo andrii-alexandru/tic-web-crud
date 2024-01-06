@@ -117,11 +117,15 @@ const createQuote = async () => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        const response = await axios.post('http://localhost:3000/create-quote', quoteData.value, {
-          headers: {
-            Authorization: idToken
+        const response = await axios.post(
+          'https://quotes.andrii.ro/api/create-quote',
+          quoteData.value,
+          {
+            headers: {
+              Authorization: idToken
+            }
           }
-        })
+        )
 
         if (response.status === 200) {
           ElMessage({

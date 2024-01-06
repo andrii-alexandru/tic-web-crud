@@ -1,6 +1,15 @@
 <script setup>
 import DefaultLayout from '../components/default_layout.vue'
 import app_logo from '../components/app_logo.vue'
+import { onMounted } from 'vue'
+import { getCurrentInstance } from 'vue'
+
+onMounted(() => {
+  console.log('MainHome.vue is mounted!')
+  const internalInstance = getCurrentInstance()
+  console.log('internalInstance:', internalInstance)
+  console.log(internalInstance.appContext.config.globalProperties.apiUrl)
+})
 </script>
 
 <template>
@@ -16,11 +25,14 @@ import app_logo from '../components/app_logo.vue'
         Enjoy the seamless experience of creating, reading, updating, and deleting quotes
         effortlessly. Let the words resonate and uplift your spirits.
       </p>
-      <el-link type="primary" href="/quotes">
-        <el-icon><DArrowRight /></el-icon>
-        &nbsp; Explore the quotes
-      </el-link>
+      <router-link to="/quotes">
+        <el-link type="primary">
+          <el-icon><DArrowRight /></el-icon>
+          &nbsp; Explore the quotes
+        </el-link>
+      </router-link>
     </div>
+    <el-divider border-style="none"></el-divider>
   </DefaultLayout>
 </template>
 
@@ -46,7 +58,7 @@ import app_logo from '../components/app_logo.vue'
   font-weight: 400;
   color: var(--secondary-color);
   text-align: center;
-  padding: 5rem;
+  padding: 2rem 5rem;
 }
 
 @media screen and (max-width: 768px) {

@@ -141,11 +141,15 @@ const generateRandomAuthors = function () {
       const idToken = await getFirebaseIdToken()
       if (idToken === null) return
 
-      const response = await axios.post('http://localhost:3000/generate-random-authors', null, {
-        headers: {
-          Authorization: idToken
+      const response = await axios.post(
+        'https://quotes.andrii.ro/api/generate-random-authors',
+        null,
+        {
+          headers: {
+            Authorization: idToken
+          }
         }
-      })
+      )
 
       if (response.status === 200) {
         ElMessage({
@@ -181,11 +185,15 @@ const generateRandomQuotes = function () {
       const idToken = await getFirebaseIdToken()
       if (idToken === null) return
 
-      const response = await axios.post('http://localhost:3000/generate-random-quotes', null, {
-        headers: {
-          Authorization: idToken
+      const response = await axios.post(
+        'https://quotes.andrii.ro/api/generate-random-quotes',
+        null,
+        {
+          headers: {
+            Authorization: idToken
+          }
         }
-      })
+      )
 
       if (response.status === 200) {
         ElMessage({

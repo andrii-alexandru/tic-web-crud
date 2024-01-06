@@ -20,8 +20,12 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
+app.get("/api", (req, res) => {
+  res.send("Hello World!");
+});
+
 const quoteRoutes = createQuoteRoute(admin);
-app.use("/", quoteRoutes);
+app.use("/api", quoteRoutes);
 
 const authorRoutes = createAuthorRoute(admin);
-app.use("/", authorRoutes);
+app.use("/api", authorRoutes);

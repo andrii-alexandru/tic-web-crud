@@ -130,7 +130,7 @@ const editQuote = async () => {
         if (idToken === null) return
 
         const response = await axios.put(
-          `http://localhost:3000/edit-quote/${quoteData.value.id}`,
+          `https://quotes.andrii.ro/api/edit-quote/${quoteData.value.id}`,
           quoteData.value,
           {
             headers: {
