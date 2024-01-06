@@ -16,7 +16,7 @@
                 <el-menu-item index="1-2" @click="logout"> Log out </el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group>
-                <template #title>App interaction</template>
+                <template #title>Interactions</template>
                 <el-menu-item index="1-3" @click="redirectTo('/favorites')">
                   Favorites
                 </el-menu-item>

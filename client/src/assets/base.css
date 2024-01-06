@@ -1,3 +1,7 @@
+* {
+  word-break: break-word !important;
+}
+
 body {
   transition:
     color 0.5s,
@@ -30,13 +34,12 @@ body {
   margin-left: 5px;
 }
 
-.my-5{
-    margin-top: 5px !important;
-    margin-bottom: 5px !important;
+.my-5 {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
 }
 
-.mx-10{
-    margin-left: 10px !important;
-    margin-right: 10px !important;
+.mx-10 {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
 }
-

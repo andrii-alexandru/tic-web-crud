@@ -1,8 +1,12 @@
 <template>
   <default_layout>
     <div class="not-found">
-      <h1>404 - Page Not Found</h1>
-      <p>The page you are looking for does not exist.</p>
+      <el-text size="large" class="title" tag="b">404 - PAGE NOT FOUND</el-text>
+      <el-empty description="The page you are looking for does not exist.">
+        <el-link type="primary" href="/"
+          >Go to Home Page &nbsp;<el-icon><Right /></el-icon
+        ></el-link>
+      </el-empty>
     </div>
   </default_layout>
 </template>
@@ -20,15 +24,14 @@ export default {
 <style scoped>
 .not-found {
   text-align: center;
-  margin-top: 100px;
-  padding: 1rem;
+  padding: 4rem;
 }
-.not-found h1 {
-  font-size: 5rem;
-  color: var(--el-text-color-primary);
+.not-found .title {
+  font-size: 2rem;
+  word-break: break-word !important;
 }
 .not-found p {
-  font-size: 2rem;
+  font-size: 1rem;
   color: var(--el-text-color-secondary);
 }
 </style>

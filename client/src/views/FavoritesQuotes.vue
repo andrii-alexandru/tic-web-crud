@@ -3,7 +3,9 @@
     <el-row justify="center">
       <el-text size="large" tag="b" type="primary">FAVORITES</el-text>
     </el-row>
-    <el-divider></el-divider>
+    <el-divider>
+      <el-icon><StarFilled /></el-icon>
+    </el-divider>
     <div v-if="userRef === null">
       <el-alert
         title="Not logged in"
@@ -12,38 +14,21 @@
         show-icon
       />
     </div>
-    <div>
-      <el-card shadow="always" v-loading="loading">
-        <el-table :data="quotes" style="width: 100%" v-loading="loading">
-          <el-table-column
-            label="Author Name"
-            prop="authorName"
-            sortable
-            width="150"
-          ></el-table-column>
-          <el-table-column label="Quote Body" prop="body"></el-table-column>
-          <el-table-column fixed="right" label="Operations" width="120">
-            <template #default="scope">
-              <el-popconfirm
-                title="Remove from favorites?"
-                width="250"
-                confirm-button-type="danger"
+    <el-table :data="quotes" style="width: 100%" v-loading="loading" flexible="true">
+      <el-table-column label="Author Name" prop="authorName" sortable width="150"></el-table-column>
+      <el-table-column label="Quote Body" prop="body"></el-table-column>
+      <el-table-column fixed="right" label="Operations" width="120">
+        <template #default="scope">
+          <el-popconfirm title="Remove from favorites?" width="250" confirm-button-type="danger">
+            <template #reference>
+              <el-button link type="danger" size="small" @click="removeFavoriteQuote(scope.row.id)"
+                >Remove</el-button
               >
-                <template #reference>
-                  <el-button
-                    link
-                    type="danger"
-                    size="small"
-                    @click="removeFavoriteQuote(scope.row.id)"
-                    >Remove</el-button
-                  >
-                </template>
-              </el-popconfirm>
             </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-    </div>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
   </default_layout>
 </template>
 

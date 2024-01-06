@@ -12,11 +12,14 @@ import app_logo from '../components/app_logo.vue'
         Explore the wisdom of words as you journey through a collection of inspiring and
         thought-provoking quotes. Immerse yourself in the power of language, where every quote tells
         a unique story and imparts a valuable lesson. Whether you seek motivation, reflection, or
-        simply a moment of inspiration, our app is your gateway to a world of profound insights.
+        simply a moment of inspiration, this app is your gateway to a world of profound insights.
         Enjoy the seamless experience of creating, reading, updating, and deleting quotes
-        effortlessly. Let the words resonate and uplift your spirits. Dive into the realm of
-        timeless wisdom with our Quotes CRUD App – where words come to life.
+        effortlessly. Let the words resonate and uplift your spirits.
       </p>
+      <el-link type="primary" href="/quotes">
+        <el-icon><DArrowRight /></el-icon>
+        &nbsp; Explore the quotes
+      </el-link>
     </div>
   </DefaultLayout>
 </template>

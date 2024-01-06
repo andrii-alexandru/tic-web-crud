@@ -2,7 +2,9 @@
   <DefaultLayout>
     <div class="author-form-container">
       <el-card shadow="always" class="author-form-card">
-        <h2 class="title">Create New Author</h2>
+        <el-row>
+          <el-text size="large" tag="b" type="primary">Create new author</el-text>
+        </el-row>
         <el-form
           ref="authorForm"
           :model="authorData"
