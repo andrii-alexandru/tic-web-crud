@@ -16,7 +16,6 @@
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
-              <!--              <el-button link type="primary" size="small">Edit</el-button>-->
               <edit-author-dialog
                 :author="scope.row"
                 @authorEdited="fetchAuthors"

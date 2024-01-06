@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
-
     <el-dialog
       title="Edit Author"
       v-model="dialogVisible"
@@ -68,8 +67,8 @@ const authorData = ref({
 })
 
 const authorRules = {
-  author: [{ required: true, message: 'Please select the author', trigger: 'blur' }],
-  body: [{ required: true, message: 'Please enter the quote body', trigger: 'blur' }]
+  name: [{ required: true, message: 'Please enter the author name', trigger: 'blur' }],
+  birthDate: [{ required: true, message: 'Please enter the birth date', trigger: 'blur' }]
 }
 
 const dialogVisible = ref(false)
@@ -113,6 +112,7 @@ const editQuote = async () => {
 }
 
 onMounted(() => {
-  authorData.value = authorProp.author
+  //create a copy of the author prop to avoid mutating it directly
+  authorData.value = JSON.parse(JSON.stringify(authorProp.author))
 })
 </script>

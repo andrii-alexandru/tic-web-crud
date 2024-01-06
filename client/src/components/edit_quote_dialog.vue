@@ -168,8 +168,8 @@ const updateAuthorName = () => {
 
 onMounted(() => {
   fetchAuthors()
-  quoteData.value = quoteProp.quote
 
-  console.log(quoteData.value.userEmail)
+  //create a copy of the quote prop to avoid mutating it directly
+  quoteData.value = JSON.parse(JSON.stringify(quoteProp.quote))
 })
 </script>
