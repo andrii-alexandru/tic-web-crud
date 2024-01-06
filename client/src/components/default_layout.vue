@@ -13,7 +13,9 @@
                 <el-menu-item index="1-1" @click="redirectTo('/my-account')">
                   My Account
                 </el-menu-item>
-                <el-menu-item index="1-2" @click="logout"> Log out </el-menu-item>
+                <el-menu-item index="1-2" @click="logout">
+                  <el-text type="danger">Log out</el-text>
+                </el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group>
                 <template #title>Interactions</template>

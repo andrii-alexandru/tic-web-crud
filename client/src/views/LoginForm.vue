@@ -4,14 +4,12 @@
       <el-card
         shadow="always"
         class="login-card"
-        :body-style="{ padding: '40px' }"
+        :body-style="{ padding: '1 rem', 'max-width': '400px', margin: '0 auto' }"
         v-loading="loading"
       >
         <app-logo></app-logo>
 
-        <h2 class="title">Login</h2>
-
-        <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="left">
+        <el-form ref="loginForm" :model="loginData" :rules="loginRules" label-position="top">
           <el-form-item prop="email" label="Email" label-width="150px">
             <el-input
               v-model="loginData.email"
@@ -68,7 +66,10 @@ const loginData = ref({
 })
 
 const loginRules = {
-  email: [{ required: true, message: 'Please enter your email', trigger: 'blur' }],
+  email: [
+    { required: true, message: 'Please enter your email', trigger: 'blur' },
+    { type: 'email', message: 'Please enter a valid email', trigger: 'blur' }
+  ],
   password: [{ required: true, message: 'Please enter your password', trigger: 'blur' }]
 }
 
@@ -77,7 +78,7 @@ const login = async () => {
 
   await loginForm.value.validate(async (valid) => {
     if (valid) {
-      const success = signIn(loginData.value.email, loginData.value.password)
+      const success = await signIn(loginData.value.email, loginData.value.password)
       if (success) router.push('/my-account')
     }
   })

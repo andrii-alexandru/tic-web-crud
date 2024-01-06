@@ -4,7 +4,12 @@
       <el-card shadow="always" class="author-list-card">
         <el-row>
           <el-text size="large" tag="b" type="primary">ALL AUTHORS</el-text>
-          <el-button class="mx-10" circle @click="() => router.push('/create-author')"
+          <el-button
+            type="primary"
+            plain
+            class="mx-10"
+            circle
+            @click="() => router.push('/create-author')"
             ><el-icon><Plus /></el-icon>
           </el-button>
         </el-row>

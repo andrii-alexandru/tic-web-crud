@@ -4,7 +4,12 @@
       <el-card shadow="always" class="quote-list-card">
         <el-row>
           <el-text size="large" tag="b" type="primary">ALL QUOTES</el-text>
-          <el-button class="mx-10" circle @click="() => router.push('/create-quote')"
+          <el-button
+            type="primary"
+            plain
+            class="mx-10"
+            circle
+            @click="() => router.push('/create-quote')"
             ><el-icon><Plus /></el-icon>
           </el-button>
         </el-row>
@@ -105,7 +110,7 @@ const fetchQuotes = async () => {
     )
 
     quotes.value.map((quote) => {
-      const userId = userRef.value.uid || null
+      const userId = userRef.value?.uid || null
       quote.isFavorite = quote.favorite ? quote.favorite.includes(userId) : false
     })
 

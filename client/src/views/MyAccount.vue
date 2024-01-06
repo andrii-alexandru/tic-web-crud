@@ -8,6 +8,10 @@
 
       <profile-picture v-if="!disabledRef"></profile-picture>
 
+      <el-link v-if="disabledRef" type="primary" href="/login">
+        go to login &nbsp; <el-icon><Right /></el-icon>
+      </el-link>
+
       <el-form
         ref="accountForm"
         :model="newLoginData"

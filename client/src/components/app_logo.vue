@@ -42,3 +42,9 @@
     </svg>
   </div>
 </template>
+
+<style>
+.login-logo {
+  margin-bottom: 20px;
+}
+</style>

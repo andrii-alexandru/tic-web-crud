@@ -4,7 +4,7 @@
       <el-card
         shadow="always"
         class="login-card"
-        :body-style="{ padding: '40px' }"
+        :body-style="{ padding: '1 rem', 'max-width': '400px', margin: '0 auto' }"
         v-loading="loading"
       >
         <app-logo></app-logo>
@@ -18,7 +18,7 @@
           ref="forgotPasswordForm"
           :model="forgotPasswordData"
           :rules="forgotPasswordRules"
-          label-position="left"
+          label-position="top"
           @submit.prevent="sendResetEmail"
         >
           <el-form-item prop="email" label="Email" label-width="150px">

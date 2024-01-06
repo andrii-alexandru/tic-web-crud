@@ -1,14 +1,23 @@
 <template>
   <default_layout>
     <div class="login-container">
-      <el-card shadow="always" class="login-card">
+      <el-card
+        shadow="always"
+        class="login-card"
+        :body-style="{ padding: '1 rem', 'max-width': '400px', margin: '0 auto' }"
+      >
         <app_logo></app_logo>
-        <h2 class="title">Register</h2>
+
+        <el-row justify="center">
+          <el-text type="info" size="large" tag="b">Register new account</el-text>
+        </el-row>
+        <br />
+
         <el-form
           ref="registerForm"
           :model="registerData"
           :rules="registerRules"
-          label-position="left"
+          label-position="top"
         >
           <el-form-item prop="email" label="Email" label-width="150px">
             <el-input

@@ -90,7 +90,7 @@ const editQuote = async () => {
         )
         if (response.status === 200) {
           ElMessage({
-            message: 'Quote created successfully.',
+            message: 'Author edited successfully.',
             type: 'success'
           })
           emit('authorEdited')

@@ -6,7 +6,10 @@
       :before-upload="beforeUpload"
       v-if="!profilePictureUrl"
     >
-      <el-button link>upload profile picture</el-button>
+      <el-button link>
+        <el-icon size="large"><Picture /></el-icon>
+        &nbsp; upload profile picture
+      </el-button>
     </el-upload>
 
     <template v-else>
@@ -15,9 +18,18 @@
           <el-avatar :src="profilePictureUrl" shape="circle" :size="100"></el-avatar>
         </el-col>
         <el-col>
-          <el-button v-if="profilePictureUrl" @click="removeProfilePicture" type="danger" link
-            >Remove Profile Picture</el-button
+          <el-popconfirm
+            title="Are you sure to delete this?"
+            confirmButtonText="Remove"
+            cancel-button-text="No, Thanks"
+            width="220"
+            hide-icon
+            @confirm="removeProfilePicture"
           >
+            <template #reference>
+              <el-link v-if="profilePictureUrl" type="danger">Remove Profile Picture</el-link>
+            </template>
+          </el-popconfirm>
         </el-col>
       </el-row>
     </template>
@@ -26,9 +38,16 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
-import {getAuth, onAuthStateChanged} from 'firebase/auth'
-import {deleteObject, getDownloadURL, getStorage, ref as storageRef, uploadBytes} from 'firebase/storage'
+import { onMounted, ref } from 'vue'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref as storageRef,
+  uploadBytes
+} from 'firebase/storage'
+import { ElNotification } from 'element-plus'
 
 const auth = getAuth()
 const storage = getStorage()
@@ -48,6 +67,17 @@ const getProfilePictureUrl = async (userId) => {
 
 // Function to handle file upload
 const beforeUpload = async (file) => {
+  //check if file is jpn or png
+  const validImageTypes = ['image/jpeg', 'image/png']
+  if (!validImageTypes.includes(file.type)) {
+    ElNotification({
+      title: 'Error',
+      message: 'Only JPG and PNG files are allowed',
+      type: 'error'
+    })
+    return false
+  }
+
   try {
     const storageFileRef = storageRef(storage, `profilePictures/${userId.value}/profilePicture.jpg`)
     await uploadBytes(storageFileRef, file)
