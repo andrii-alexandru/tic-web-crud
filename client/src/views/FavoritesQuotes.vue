@@ -19,11 +19,14 @@
       <el-table-column label="Quote Body" prop="body"></el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default="scope">
-          <el-popconfirm title="Remove from favorites?" width="250" confirm-button-type="danger">
+          <el-popconfirm
+            title="Remove from favorites?"
+            width="250"
+            confirm-button-type="danger"
+            @confirm="removeFavoriteQuote(scope.row.id)"
+          >
             <template #reference>
-              <el-button link type="danger" size="small" @click="removeFavoriteQuote(scope.row.id)"
-                >Remove</el-button
-              >
+              <el-button link type="danger" size="small">Remove</el-button>
             </template>
           </el-popconfirm>
         </template>
