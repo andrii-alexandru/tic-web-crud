@@ -15,7 +15,7 @@
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredQuotes" style="width: 100%" v-loading="loading">
+        <el-table :data="filteredQuotes" style="width: 100%">
           <el-table-column v-if="!!userRef">
             <template #header>
               <el-icon><Management /></el-icon>
@@ -75,14 +75,16 @@ import axios from 'axios'
 import EditQuoteDialog from '../components/edit_quote_dialog.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import router from '@/router'
+import { useStore } from 'vuex'
 
 const quotes = ref([])
 const filteredQuotes = ref([])
-const loading = ref(true)
 const currentPage = ref(1)
 const pageSize = ref(5)
+const store = useStore()
 
 const fetchQuotes = async () => {
+  store.commit('setLoading', true)
   try {
     const db = getFirestore()
     const sortedQuery = query(collection(db, 'quotes'), orderBy('createdAt', 'desc'))
@@ -114,11 +116,12 @@ const fetchQuotes = async () => {
       quote.isFavorite = quote.favorite ? quote.favorite.includes(userId) : false
     })
 
-    loading.value = false
     updateFilteredQuotes()
   } catch (error) {
     console.error('Error fetching quotes: ', error)
   }
+
+  store.commit('setLoading', false)
 }
 
 const updateFilteredQuotes = () => {
@@ -139,6 +142,7 @@ const handlePageSizeChange = (size) => {
 }
 
 const deleteQuote = async (quoteId) => {
+  store.commit('setLoading', true)
   try {
     ElMessageBox.confirm('This will permanently delete the quote. Continue?', 'Error', {
       confirmButtonText: 'DELETE',
@@ -171,9 +175,11 @@ const deleteQuote = async (quoteId) => {
   } catch (error) {
     console.error('Error deleting quote: ', error)
   }
+  store.commit('setLoading', false)
 }
 
 const updateFavorite = async (quoteId, isFavorite) => {
+  store.commit('setLoading', true)
   try {
     const idToken = await getFirebaseIdToken()
     if (idToken === null) return
@@ -198,6 +204,7 @@ const updateFavorite = async (quoteId, isFavorite) => {
   } catch (error) {
     console.error('Error updating favorite: ', error)
   }
+  store.commit('setLoading', false)
 }
 
 const userRef = ref(null)

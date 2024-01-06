@@ -15,7 +15,7 @@
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredAuthors" style="width: 100%" v-loading="loading">
+        <el-table :data="filteredAuthors" style="width: 100%">
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
@@ -56,14 +56,16 @@ import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import EditAuthorDialog from '@/components/edit_author_dialog.vue'
 import router from '@/router'
+import { useStore } from 'vuex'
 
 const authors = ref([])
 const filteredAuthors = ref([])
-const loading = ref(true)
 const currentPage = ref(1)
 const pageSize = ref(5)
+const store = useStore()
 
 const fetchAuthors = async () => {
+  store.commit('setLoading', true)
   try {
     const db = getFirestore()
     const authorsCollection = collection(db, 'authors')
@@ -81,11 +83,11 @@ const fetchAuthors = async () => {
         ...otherData
       }
     })
-    loading.value = false
     updateFilteredAuthors()
   } catch (error) {
     console.error('Error fetching authors: ', error)
   }
+  store.commit('setLoading', false)
 }
 
 const updateFilteredAuthors = () => {
@@ -106,6 +108,7 @@ const handlePageSizeChange = (size) => {
 }
 
 const deleteQuote = async (authorId) => {
+  store.commit('setLoading', true)
   try {
     ElMessageBox.confirm('This will permanently delete the quote. Continue?', 'Error', {
       confirmButtonText: 'DELETE',
@@ -138,6 +141,7 @@ const deleteQuote = async (authorId) => {
   } catch (error) {
     console.error('Error deleting quote: ', error)
   }
+  store.commit('setLoading', false)
 }
 
 onMounted(() => {

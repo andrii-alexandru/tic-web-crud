@@ -48,6 +48,7 @@ import {
   uploadBytes
 } from 'firebase/storage'
 import { ElNotification } from 'element-plus'
+import { useStore } from 'vuex'
 
 const auth = getAuth()
 const storage = getStorage()
@@ -55,18 +56,24 @@ const storage = getStorage()
 const userId = ref(null)
 const profilePictureUrl = ref(null)
 
+const store = useStore()
+
 // Function to get the user's profile picture URL
 const getProfilePictureUrl = async (userId) => {
+  store.commit('setLoading', true)
   try {
     const storageFileRef = storageRef(storage, `profilePictures/${userId}/profilePicture.jpg`)
     profilePictureUrl.value = await getDownloadURL(storageFileRef)
   } catch (error) {
     profilePictureUrl.value = null
   }
+  store.commit('setLoading', false)
 }
 
 // Function to handle file upload
 const beforeUpload = async (file) => {
+  store.commit('setLoading', true)
+
   //check if file is jpn or png
   const validImageTypes = ['image/jpeg', 'image/png']
   if (!validImageTypes.includes(file.type)) {
@@ -86,12 +93,13 @@ const beforeUpload = async (file) => {
     console.error('Error uploading profile picture:', error)
   }
 
-  // Prevent automatic upload by returning false
+  store.commit('setLoading', false)
   return false
 }
 
 // Function to remove the user's profile picture
 const removeProfilePicture = async () => {
+  store.commit('setLoading', true)
   try {
     const storageFileRef = storageRef(storage, `profilePictures/${userId.value}/profilePicture.jpg`)
     await deleteObject(storageFileRef)
@@ -99,6 +107,7 @@ const removeProfilePicture = async () => {
   } catch (error) {
     console.error('Error removing profile picture:', error)
   }
+  store.commit('setLoading', false)
 }
 
 onMounted(() => {

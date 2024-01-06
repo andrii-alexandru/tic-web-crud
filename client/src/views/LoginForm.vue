@@ -5,7 +5,6 @@
         shadow="always"
         class="login-card"
         :body-style="{ padding: '1 rem', 'max-width': '400px', margin: '0 auto' }"
-        v-loading="loading"
       >
         <app-logo></app-logo>
 
@@ -55,10 +54,11 @@ import DefaultLayout from '@/components/default_layout.vue'
 import AppLogo from '@/components/app_logo.vue'
 import { signIn } from '@/components/utils/authUtils'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
-const loading = ref(false)
 const loginForm = ref(null)
 const router = useRouter()
+const store = useStore()
 
 const loginData = ref({
   email: '',
@@ -74,7 +74,7 @@ const loginRules = {
 }
 
 const login = async () => {
-  loading.value = true
+  store.commit('setLoading', true)
 
   await loginForm.value.validate(async (valid) => {
     if (valid) {
@@ -83,6 +83,6 @@ const login = async () => {
     }
   })
 
-  loading.value = false
+  store.commit('setLoading', false)
 }
 </script>
