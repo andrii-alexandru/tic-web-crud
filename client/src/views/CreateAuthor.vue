@@ -5,6 +5,7 @@
         <el-row>
           <el-text size="large" tag="b" type="primary">Create new author</el-text>
         </el-row>
+        <el-divider border-style="none"></el-divider>
         <el-form
           ref="authorForm"
           :model="authorData"
@@ -41,6 +42,8 @@
                 /> </el-form-item
             ></el-col>
           </el-row>
+
+          <el-divider border-style="none"></el-divider>
 
           <el-row justify="center">
             <el-form-item>
@@ -148,7 +151,7 @@ const createAuthor = async () => {
 }
 .author-form-container .author-form-card {
   width: 60vw;
-  padding: 4rem;
+  padding: 3rem;
 }
 
 @media screen and (max-width: 768px) {

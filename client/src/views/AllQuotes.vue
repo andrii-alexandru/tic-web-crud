@@ -8,7 +8,7 @@
             ><el-icon><Plus /></el-icon>
           </el-button>
         </el-row>
-        <el-divider></el-divider>
+        <el-divider border-style="none"></el-divider>
 
         <el-table :data="filteredQuotes" style="width: 100%" v-loading="loading">
           <el-table-column v-if="!!userRef">

@@ -8,7 +8,7 @@
             ><el-icon><Plus /></el-icon>
           </el-button>
         </el-row>
-        <el-divider></el-divider>
+        <el-divider border-style="none"></el-divider>
 
         <el-table :data="filteredAuthors" style="width: 100%" v-loading="loading">
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>

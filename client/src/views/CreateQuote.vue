@@ -2,7 +2,10 @@
   <DefaultLayout>
     <div class="quote-form-container">
       <el-card shadow="always" class="quote-form-card">
-        <h2 class="title">Create New Quote</h2>
+        <el-row>
+          <el-text size="large" tag="b" type="primary">Create new quote</el-text>
+        </el-row>
+        <el-divider border-style="none"></el-divider>
         <el-form
           ref="quoteForm"
           :model="quoteData"
@@ -57,6 +60,8 @@
           <el-form-item label="Significant">
             <el-switch v-model="quoteData.significant" />
           </el-form-item>
+
+          <el-divider border-style="none"></el-divider>
 
           <el-row justify="center">
             <el-form-item>
@@ -174,7 +179,7 @@ onMounted(() => {
 }
 .quote-form-container .quote-form-card {
   width: 60vw;
-  padding: 4rem;
+  padding: 3rem;
 }
 
 .inline-row {
