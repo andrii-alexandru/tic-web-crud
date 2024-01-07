@@ -6,15 +6,18 @@
     <el-divider>
       <el-icon><StarFilled /></el-icon>
     </el-divider>
-    <div v-if="userRef === null">
+    <el-row justify="center" v-if="!userRef">
       <el-alert
         title="Not logged in"
         description="You have to log in in order to view favorite quotes."
         type="error"
         show-icon
       />
-    </div>
-    <el-table :data="quotes" style="width: 100%" v-loading="loading" flexible="true">
+      <el-link class="mt-20" v-if="!userRef" type="danger" href="/login">
+        go to login &nbsp; <el-icon><Right /></el-icon>
+      </el-link>
+    </el-row>
+    <el-table v-if="userRef" :data="quotes" style="width: 100%" v-loading="loading" flexible="true">
       <el-table-column label="Author Name" prop="authorName" sortable width="150"></el-table-column>
       <el-table-column label="Quote Body" prop="body"></el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
@@ -60,7 +63,7 @@ const fetchQuotes = async () => {
 
     //filter qutoes
     quotes.value = quotes.value.filter((quote) => {
-      const userId = userRef.value.uid || null
+      const userId = userRef.value?.uid || null
 
       if (Array.isArray(quote.favorite) && quote.favorite.length > 0) {
         return quote.favorite.includes(userId)
