@@ -104,7 +104,6 @@ const authorRules = {
 }
 
 const createAuthor = async () => {
-  console.log('authorData: ', authorData.value)
   authorForm.value.validate(async (valid) => {
     if (valid) {
       try {

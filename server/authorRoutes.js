@@ -146,8 +146,7 @@ const createAuthorRoute = (admin) => {
           return res.status(400).send("No file uploaded.");
         }
 
-        const filePath = path.join(__dirname, "uploads", file.filename);
-        console.log(filePath);
+        path.join(__dirname, "uploads", file.filename);
 
         res.status(200).send({
           message: "File uploaded successfully.",

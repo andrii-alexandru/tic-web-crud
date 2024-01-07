@@ -1,15 +1,6 @@
 <script setup>
 import DefaultLayout from '../components/default_layout.vue'
 import app_logo from '../components/app_logo.vue'
-import { onMounted } from 'vue'
-import { getCurrentInstance } from 'vue'
-
-onMounted(() => {
-  console.log('MainHome.vue is mounted!')
-  const internalInstance = getCurrentInstance()
-  console.log('internalInstance:', internalInstance)
-  console.log(internalInstance.appContext.config.globalProperties.apiUrl)
-})
 </script>
 
 <template>
