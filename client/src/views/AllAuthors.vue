@@ -19,7 +19,7 @@
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
-          <el-table-column fixed="right" label="Operations" width="120">
+          <el-table-column label="Operations" width="120">
             <template #default="scope">
               <edit-author-dialog
                 :author="scope.row"

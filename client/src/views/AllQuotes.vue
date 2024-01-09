@@ -31,16 +31,16 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="Author" prop="author" width="150" sortable></el-table-column>
+          <el-table-column label="Author" prop="author" sortable></el-table-column>
           <el-table-column label="Quote Body" prop="body" width="600"></el-table-column>
-          <el-table-column label="Reference" prop="bookReference" width="150"></el-table-column>
-          <el-table-column label="Significant" prop="significant" width="110">
+          <el-table-column label="Reference" prop="bookReference"></el-table-column>
+          <el-table-column label="Significant" prop="significant">
             <template #default="scope">
               <el-tag v-if="scope.row.significant" type="success">Significant</el-tag>
               <span v-else></span>
             </template>
           </el-table-column>
-          <el-table-column label="Operations" width="120">
+          <el-table-column label="Operations">
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
               <el-button link type="danger" size="small" @click="deleteQuote(scope.row.id)"
