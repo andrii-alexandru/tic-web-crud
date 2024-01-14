@@ -1,6 +1,13 @@
 <template>
   <el-container class="layout-container-demo" v-loading="loading">
     <el-drawer v-model="aside_visible" :show-close="true" direction="ltr" size="auto">
+      <template #header>
+        <div>
+          <el-button type="danger" circle plain @click="logout">
+            <el-icon><SwitchButton /></el-icon>
+          </el-button>
+        </div>
+      </template>
       <el-aside width="50vw">
         <el-scrollbar>
           <el-menu :default-openeds="['2']">
@@ -13,9 +20,9 @@
                 <el-menu-item index="1-1" @click="redirectTo('/my-account')">
                   My Account
                 </el-menu-item>
-                <el-menu-item index="1-2" @click="logout">
+                <!-- <el-menu-item index="1-2" @click="logout">
                   <el-text type="danger">Log out</el-text>
-                </el-menu-item>
+                </el-menu-item> -->
               </el-menu-item-group>
               <el-menu-item-group>
                 <template #title>Interactions</template>
