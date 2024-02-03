@@ -22,16 +22,11 @@
                 </el-icon>User
               </template>
               <el-menu-item-group>
-                <template #title>User data section</template>
                 <el-menu-item index="1-1" @click="redirectTo('/my-account')">
                   My Account
                 </el-menu-item>
-                <!-- <el-menu-item index="1-2" @click="logout">
-                  <el-text type="danger">Log out</el-text>
-                </el-menu-item> -->
               </el-menu-item-group>
               <el-menu-item-group>
-                <template #title>Interactions</template>
                 <el-menu-item index="1-3" @click="redirectTo('/favorites')">
                   Favorites
                 </el-menu-item>
@@ -44,20 +39,10 @@
                 </el-icon>Authors & Quotes
               </template>
               <el-menu-item-group>
-                <template #title>Authors section</template>
-                <el-menu-item index="2-1" @click="redirectTo('/authors')">
-                  All authors
-                </el-menu-item>
-                <el-menu-item index="2-2" @click="redirectTo('/create-author')">
-                  Create author
-                </el-menu-item>
+                <el-menu-item index="2-1" @click="redirectTo('/authors')"> Authors </el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group>
-                <template #title>Quotes section</template>
-                <el-menu-item index="2-3" @click="redirectTo('/quotes')"> All quotes </el-menu-item>
-                <el-menu-item index="2-4" @click="redirectTo('/create-quote')">
-                  Create quote
-                </el-menu-item>
+                <el-menu-item index="2-3" @click="redirectTo('/quotes')"> Quotes </el-menu-item>
               </el-menu-item-group>
             </el-sub-menu>
             <el-sub-menu index="3">
@@ -80,7 +65,7 @@
         </el-scrollbar>
       </el-aside>
     </el-drawer>
-    
+
     <el-header>
       <el-row justify="space-between" align="middle" style="height: 100%">
         <el-button type="primary" plain style="margin-left: 16px" @click="aside_visible = true" round>

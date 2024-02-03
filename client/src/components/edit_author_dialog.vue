@@ -1,37 +1,19 @@
 <template>
   <div>
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
-    <el-dialog
-      title="Edit Author"
-      v-model="dialogVisible"
-      width="80vw"
-      style="z-index: 100 !important"
-      :append-to-body="true"
-    >
+    <el-dialog @open="openDialog" title="Edit Author" v-model="dialogVisible" width="80vw" style="z-index: 100 !important"
+      :append-to-body="true" @close="setInitialData">
       <el-form :model="authorData" :rules="authorRules" ref="authorForm" label-position="top">
         <el-form-item prop="name" label="Author Name" class="form-item">
-          <el-input
-            v-model="authorData.name"
-            placeholder="Enter author name"
-            size="large"
-          ></el-input>
+          <el-input v-model="authorData.name" placeholder="Enter author name" size="large"></el-input>
         </el-form-item>
         <el-form-item prop="birthDate" label="Birth Date" class="form-item">
-          <el-date-picker
-            v-model="authorData.birthDate"
-            type="year"
-            placeholder="Pick a year"
-            size="large"
-            style="width: 100%"
-          />
+          <el-date-picker v-model="authorData.birthDate" type="year" placeholder="Pick a year" size="large"
+            style="width: 100%" />
         </el-form-item>
         <el-form-item prop="nationality" label="Country of origin" class="form-item">
-          <nationalities-dropdown
-            :nationality="authorData.nationality"
-            @selected-nationality="
-              (selectedNationality) => (authorData.nationality = selectedNationality)
-            "
-          />
+          <nationalities-dropdown :nationality="authorData.nationality" @selected-nationality="(selectedNationality) => (authorData.nationality = selectedNationality)
+            " />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -44,11 +26,11 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import axios from 'axios'
 import NationalitiesDropdown from './nationalities_dropdown.vue'
+import { defineProps, defineEmits, watch } from 'vue'
 
 const authorProp = defineProps({
   author: Object
@@ -57,14 +39,7 @@ const authorProp = defineProps({
 const emit = defineEmits(['authorEdited'])
 
 const authorForm = ref(null)
-
-const authorData = ref({
-  id: '',
-  author: '',
-  body: '',
-  bookReference: '',
-  significant: false
-})
+const authorData = ref(null)
 
 const authorRules = {
   name: [{ required: true, message: 'Please enter the author name', trigger: 'blur' }],
@@ -111,8 +86,18 @@ const editQuote = async () => {
   })
 }
 
-onMounted(() => {
-  //create a copy of the author prop to avoid mutating it directly
+const setInitialData = () => {
   authorData.value = JSON.parse(JSON.stringify(authorProp.author))
+  delete authorData.value.createdAt
+  delete authorData.value.updatedAt
+  authorData.value.birthDate = new Date(authorData.value.birthDate, 1)
+}
+
+const openDialog = () => {
+  setInitialData() 
+}
+
+onMounted(() => {
+  setInitialData()
 })
 </script>

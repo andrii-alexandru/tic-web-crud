@@ -51,6 +51,8 @@ const createAuthorRoute = (admin) => {
         new Date(authorData.birthDate)
       );
 
+      console.log("authorData", authorData);
+
       await authorRef.update({
         ...authorData,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -123,7 +125,7 @@ const createAuthorRoute = (admin) => {
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "uploads/"); // Specify the folder where uploaded files will be stored
+      cb(null, "uploads/"); 
     },
     filename: (req, file, cb) => {
       const ext = path.extname(file.originalname);

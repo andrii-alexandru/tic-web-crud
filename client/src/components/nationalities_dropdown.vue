@@ -1,27 +1,18 @@
 <template>
-  <el-select
-    v-model="selectedNationality"
-    size="large"
-    filterable
-    default-first-option
-    @change="emitSelectedNationality"
-    style="width: 100%"
-  >
-    <el-option style="color: brown" value="Unknown"
-      ><el-icon><QuestionFilled /></el-icon>
+  <el-select v-model="selectedNationality" size="large" filterable default-first-option @change="emitSelectedNationality"
+    style="width: 100%">
+    <el-option style="color: brown" value="Unknown"><el-icon>
+        <QuestionFilled />
+      </el-icon>
       &nbsp; Unknown
     </el-option>
-    <el-option
-      v-for="nationality in nationalities"
-      :key="nationality"
-      :label="nationality"
-      :value="nationality"
-    ></el-option>
+    <el-option v-for="nationality in nationalities" :key="nationality" :label="nationality"
+      :value="nationality"></el-option>
   </el-select>
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps } from 'vue'
+import { ref, onMounted, defineProps, watch } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['selectedNationality'])
@@ -49,6 +40,10 @@ const emitSelectedNationality = () => {
     emit('selectedNationality', selectedNationality.value)
   }
 }
+
+watch(() => props.nationality, (newValue) => {
+  selectedNationality.value = newValue
+})
 
 onMounted(() => {
   fetchNationalities()

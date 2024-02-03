@@ -36,7 +36,7 @@
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
               <el-button link type="danger" size="small"
-                @click="deleteQuote(scope.row.id, scope.row.author.id)">Delete</el-button>
+                @click="deleteQuote(scope.row.id, scope.row.authorId)">Delete</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -64,7 +64,6 @@ import { useStore } from 'vuex'
 
 const quotes = ref([])
 const filteredQuotes = ref([])
-const totalQuotes = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(5)
 const store = useStore()
@@ -96,6 +95,10 @@ const fetchQuotes = async () => {
           isFavorite: quoteDoc.data().favorite.includes(userRef.value.uid)
         });
       });
+
+      quotes.value.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      })
 
       updateFilteredQuotes()
     });
@@ -132,6 +135,8 @@ const deleteQuote = async (quoteId, authorId) => {
   store.commit('setLoading', true)
 
   try {
+    if(quoteId === undefined || authorId === undefined) throw new Error('quoteId and authorId are required')
+
     ElMessageBox.confirm('This will permanently delete the quote. Continue?', 'Error', {
       confirmButtonText: 'DELETE',
       cancelButtonText: 'Cancel',

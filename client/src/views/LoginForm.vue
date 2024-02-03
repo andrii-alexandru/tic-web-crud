@@ -79,7 +79,7 @@ const login = async () => {
   await loginForm.value.validate(async (valid) => {
     if (valid) {
       const success = await signIn(loginData.value.email, loginData.value.password)
-      if (success) router.push('/my-account')
+      if (success) router.push('/')
     }
   })
 

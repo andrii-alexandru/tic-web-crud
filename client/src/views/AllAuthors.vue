@@ -15,7 +15,7 @@
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredAuthors" style="width: 100%" empty-text="No author registered yet... 😢">
+        <el-table :data="filteredAuthors" style="width: 100%" empty-text="No author registered">
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
           <el-table-column label="Country of origin" prop="nationality"></el-table-column>
@@ -50,7 +50,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
+import { getFirestore, collection, getDocs, query, orderBy } from 'firebase/firestore'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
@@ -69,7 +69,8 @@ const fetchAuthors = async () => {
   try {
     const db = getFirestore()
     const authorsCollection = collection(db, 'authors')
-    const querySnapshot = await getDocs(authorsCollection)
+    const q = query(authorsCollection, orderBy('createdAt', 'desc'))
+    const querySnapshot = await getDocs(q)
 
     authors.value = querySnapshot.docs.map((doc) => {
       const { birthDate, ...otherData } = doc.data()

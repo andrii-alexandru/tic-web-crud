@@ -2,22 +2,23 @@
   <DefaultLayout>
     <div class="quote-form-container">
       <el-card shadow="always" class="quote-form-card">
-        <el-row>
-          <el-text size="large" tag="b" type="primary">Create new quote</el-text>
-        </el-row>
+        <el-page-header @back="goBack">
+          <template #content>
+            <el-text size="large" tag="b" type="primary">Create new quote</el-text>
+          </template>
+        </el-page-header>
+
         <el-divider border-style="none"></el-divider>
         <el-form ref="quoteForm" :model="quoteData" :rules="quoteRules" label-position="top" class="quote-form">
           <el-form-item prop="authorId" label="Author">
-            <div class="inline-row">
+            <el-space fill>
               <el-select v-model="quoteData.authorId" placeholder="Select Author" size="large" filterable>
                 <el-option v-for="author in authors" :key="author.id" :label="author.name" :value="author.id"></el-option>
               </el-select>
-              <add-author-dialog v-if="authors.length > 0" :quoteData="quoteData" :authors="authors"
-                :fetchAuthors="fetchAuthors" @authorAdded="() => {
-                    fetchAuthors()
-                  }
-                  " />
-            </div>
+              <el-alert type="info" show-icon :closable="false">
+                <p>The author cannot be changed afterwards!</p>
+              </el-alert>
+            </el-space>
           </el-form-item>
           <el-form-item prop="body" label="Quote Body" label-width="150px">
             <el-input v-model="quoteData.body" type="textarea" placeholder="Enter the quote..." size="large"></el-input>
@@ -51,7 +52,6 @@ import { useRouter } from 'vue-router'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import axios from 'axios'
-import AddAuthorDialog from '../components/add_author_dialog.vue'
 
 const router = useRouter()
 
@@ -112,7 +112,6 @@ const createQuote = async () => {
   })
 }
 
-// Fetch authors from Firestore
 const fetchAuthors = async () => {
   try {
     const db = getFirestore()
@@ -123,6 +122,10 @@ const fetchAuthors = async () => {
   } catch (error) {
     console.error('Error fetching authors: ', error)
   }
+}
+
+const goBack = () => {
+  router.push('/quotes')
 }
 
 onMounted(() => {

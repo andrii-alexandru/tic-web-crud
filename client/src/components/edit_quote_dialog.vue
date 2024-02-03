@@ -2,19 +2,13 @@
   <div>
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
 
-    <el-dialog title="Edit Quote" v-model="dialogVisible" width="80vw" style="z-index: 100 !important"
+    <el-dialog @open="openDialog" title="Edit Quote" v-model="dialogVisible" width="80vw" style="z-index: 100 !important"
       :append-to-body="true">
       <el-form :model="quoteData" :rules="quoteRules" ref="quoteForm" label-position="top">
         <el-form-item prop="authorId" label="Author">
-          <el-select v-model="quoteData.authorId" placeholder="Select Author" size="large">
+          <el-select v-model="quoteData.authorId" placeholder="Select Author" size="large" disabled>
             <el-option v-for="author in authors" :key="author.id" :label="author.name" :value="author.id"></el-option>
           </el-select>
-          &nbsp;&nbsp; &nbsp;&nbsp;
-          <add-author-dialog v-if="authors.length > 0" :quoteData="quoteData" :authors="authors"
-            :fetchAuthors="fetchAuthors" @authorAdded="() => {
-              fetchAuthors()
-            }
-              " />
         </el-form-item>
         <el-form-item prop="body" label="Quote Body" label-width="150px">
           <el-input v-model="quoteData.body" type="textarea" placeholder="Enter the quote..." size="large"></el-input>
@@ -43,7 +37,6 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import AddAuthorDialog from './add_author_dialog.vue'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
@@ -125,19 +118,25 @@ const editQuote = async () => {
   })
 }
 
-onMounted(() => {
-  fetchAuthors()
-
-  //create a copy of the quote prop to avoid mutating it directly
+const setInitialData = () => {
   let quotePropJson = JSON.parse(JSON.stringify(quoteProp.quote))
 
   quoteData.value = {
     id: quotePropJson.id,
-    authorId: quotePropJson.author.id,
+    authorId: quotePropJson.authorId,
     body: quotePropJson.body,
     bookReference: quotePropJson.bookReference,
     significant: quotePropJson.significant,
     userEmail: quotePropJson.userEmail
   }
+}
+
+const openDialog = () => {
+  setInitialData()
+}
+
+onMounted(() => {
+  fetchAuthors()
+  setInitialData()
 })
 </script>

@@ -3,10 +3,12 @@
     <div class="container">
       <div class="page-title">
         <h1>My Account</h1>
-        <p>Edit personal account data</p>
       </div>
 
       <profile-picture v-if="!disabledRef"></profile-picture>
+
+      <br>
+      <br>
 
       <el-link v-if="disabledRef" type="primary" href="/login">
         go to login &nbsp; <el-icon>
@@ -15,11 +17,15 @@
       </el-link>
 
       <el-form ref="accountForm" :model="changePasswordData" :rules="accountRules" label-position="top"
-        :disabled="disabledRef">
+        :disabled="disabledRef" class="mt-5">
         <el-form-item prop="email" label="Email" label-width="150px">
           <el-input v-model="userEmail" prefix-icon="message" placeholder="Email" size="large"
             disabled></el-input>
         </el-form-item>
+        
+        <br/>
+        <el-text size="large" tag="b">CHANGE PASSWORD SECTION</el-text>
+        
         <el-form-item prop="oldPassword" label="Old Password" label-width="150px">
           <el-input type="password" v-model="changePasswordData.oldPassword" prefix-icon="lock" placeholder="Old Password"
             size="large" show-password></el-input>
@@ -35,8 +41,7 @@
 
         <el-row justify="center">
           <el-form-item>
-            <el-button type="primary" class="login-button" @click="editAccount" size="large" plain>Edit
-              account</el-button>
+            <el-button type="info" class="login-button" @click="editAccount" size="large">change password</el-button>
           </el-form-item>
         </el-row>
       </el-form>
@@ -46,7 +51,7 @@
 
 <script setup>
 import DefaultLayout from '../components/default_layout.vue'
-import { getAuth, onAuthStateChanged, updateEmail, updatePassword, reauthenticateWithCredential, AuthCredential, EmailAuthCredential, EmailAuthProvider } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import ProfilePicture from '../components/profile_picture.vue'

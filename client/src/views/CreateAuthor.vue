@@ -2,9 +2,11 @@
   <DefaultLayout>
     <div class="author-form-container">
       <el-card shadow="always" class="author-form-card">
-        <el-row>
-          <el-text size="large" tag="b" type="primary">Create new author</el-text>
-        </el-row>
+        <el-page-header @back="goBack">
+          <template #content>
+            <el-text size="large" tag="b" type="primary">Create new author</el-text>
+          </template>
+        </el-page-header>
         <el-divider border-style="none"></el-divider>
         <el-form
           ref="authorForm"
@@ -68,9 +70,9 @@ import { ref } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
 import { ElMessage } from 'element-plus'
 import { getFirebaseIdToken } from '../components/utils/authUtils.js'
-import axios from 'axios'
 import NationalitiesDropdown from '../components/nationalities_dropdown.vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -142,6 +144,10 @@ const createAuthor = async () => {
       }
     }
   })
+}
+
+const goBack = () => {
+  router.push('/authors')
 }
 </script>
 

@@ -123,7 +123,7 @@ const registerUser = () => {
     let password = registerData.value.password
     if (valid) {
       const success = register(email, password)
-      if (success) await router.push('/my-account')
+      if (success) await router.push('/')
     }
   })
 }
