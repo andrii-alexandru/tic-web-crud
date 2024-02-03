@@ -56,6 +56,7 @@
                 @click="registerUser"
                 size="large"
                 round
+                plain
                 >Register</el-button
               >
             </el-form-item>

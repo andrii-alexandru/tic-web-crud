@@ -17,7 +17,7 @@
         go to login &nbsp; <el-icon><Right /></el-icon>
       </el-link>
     </el-row>
-    <el-table v-if="userRef" :data="quotes" style="width: 100%" v-loading="loading" flexible="true">
+    <el-table v-if="userRef" :data="quotes" style="width: 100%" v-loading="loading" :flexible="true">
       <el-table-column label="Author Name" prop="authorName" sortable width="150"></el-table-column>
       <el-table-column label="Quote Body" prop="body"></el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
@@ -79,6 +79,8 @@ const fetchQuotes = async () => {
 }
 
 const removeFavoriteQuote = async (quoteId) => {
+  loading.value = true
+  
   try {
     const idToken = await getFirebaseIdToken()
     if (idToken === null) return
@@ -105,6 +107,8 @@ const removeFavoriteQuote = async (quoteId) => {
   } catch (error) {
     console.error('Error removing favorite quote: ', error)
   }
+
+  loading.value = false
 }
 
 onMounted(() => {

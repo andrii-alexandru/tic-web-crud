@@ -3,9 +3,13 @@
     <el-drawer v-model="aside_visible" :show-close="true" direction="ltr" size="auto">
       <template #header>
         <div>
-          <el-button type="danger" circle plain @click="logout">
-            <el-icon><SwitchButton /></el-icon>
-          </el-button>
+          <el-tooltip content="This action will log you out!" show-arrow>
+            <el-button v-if="userRef" type="danger" circle plain @click="logout">
+              <el-icon>
+                <SwitchButton />
+              </el-icon>
+            </el-button>
+          </el-tooltip>
         </div>
       </template>
       <el-aside width="50vw">
@@ -13,7 +17,9 @@
           <el-menu :default-openeds="['2']">
             <el-sub-menu index="1">
               <template #title>
-                <el-icon> <User /> </el-icon>User
+                <el-icon>
+                  <User />
+                </el-icon>User
               </template>
               <el-menu-item-group>
                 <template #title>User data section</template>
@@ -33,7 +39,9 @@
             </el-sub-menu>
             <el-sub-menu index="2">
               <template #title>
-                <el-icon><Collection /></el-icon>Authors & Quotes
+                <el-icon>
+                  <Collection />
+                </el-icon>Authors & Quotes
               </template>
               <el-menu-item-group>
                 <template #title>Authors section</template>
@@ -54,7 +62,9 @@
             </el-sub-menu>
             <el-sub-menu index="3">
               <template #title>
-                <el-icon><CirclePlus /></el-icon>Faker data
+                <el-icon>
+                  <CirclePlus />
+                </el-icon>Faker data
               </template>
               <el-menu-item-group>
                 <template #title>Generate faker data (10 each)</template>
@@ -72,28 +82,14 @@
     </el-drawer>
     <el-header>
       <el-row justify="space-between" align="middle" style="height: 100%">
-        <el-button
-          type="primary"
-          plain
-          style="margin-left: 16px"
-          @click="aside_visible = true"
-          round
-        >
+        <el-button type="primary" plain style="margin-left: 16px" @click="aside_visible = true" round>
           <el-icon>
             <Expand />
           </el-icon>
         </el-button>
-        <el-button
-          link
-          v-if="!userRef"
-          @click="redirectTo('/login')"
-          type="primary"
-          class="hidden-md-and-down"
-          >Login</el-button
-        >
-        <el-text type="info" class="hidden-md-and-down" v-else
-          >Welcome, {{ userRef.email }}</el-text
-        >
+        <el-button link v-if="!userRef" @click="redirectTo('/login')" type="primary"
+          class="hidden-md-and-down">Login</el-button>
+        <el-text type="info" class="hidden-md-and-down" v-else>Welcome, {{ userRef.email }}</el-text>
         <Thememodeswitch />
       </el-row>
     </el-header>

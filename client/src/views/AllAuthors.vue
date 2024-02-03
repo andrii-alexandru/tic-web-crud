@@ -15,7 +15,7 @@
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredAuthors" style="width: 100%">
+        <el-table :data="filteredAuthors" style="width: 100%" empty-text="No author registered">
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
           <el-table-column label="Nationality" prop="nationality"></el-table-column>
@@ -110,7 +110,7 @@ const handlePageSizeChange = (size) => {
 const deleteQuote = async (authorId) => {
   store.commit('setLoading', true)
   try {
-    ElMessageBox.confirm('This will permanently delete the quote. Continue?', 'Error', {
+    ElMessageBox.confirm('This will permanently delete the author. Continue?', 'Error', {
       confirmButtonText: 'DELETE',
       cancelButtonText: 'Cancel',
       type: 'error'
