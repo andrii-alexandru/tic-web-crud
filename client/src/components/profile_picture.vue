@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-upload action="#" :show-file-list="false" :before-upload="beforeUpload" v-if="!profilePictureUrl">
+    <el-upload
+      action="#"
+      :show-file-list="false"
+      :before-upload="beforeUpload"
+      v-if="!profilePictureUrl"
+    >
       <el-tooltip content="This will upload profile picture directly" placement="bottom">
         <el-button link>
           <el-icon size="large">
@@ -17,8 +22,14 @@
           <el-avatar :src="profilePictureUrl" shape="circle" :size="100"></el-avatar>
         </el-col>
         <el-col>
-          <el-popconfirm title="Are you sure to delete this?" confirmButtonText="Remove" cancel-button-text="No, Thanks"
-            width="220" hide-icon @confirm="removeProfilePicture">
+          <el-popconfirm
+            title="Are you sure to delete this?"
+            confirmButtonText="Remove"
+            cancel-button-text="No, Thanks"
+            width="220"
+            hide-icon
+            @confirm="removeProfilePicture"
+          >
             <template #reference>
               <el-link v-if="profilePictureUrl" type="danger">Remove Profile Picture</el-link>
             </template>

@@ -4,14 +4,24 @@
       <el-card shadow="always" class="quote-list-card">
         <el-row>
           <el-text size="large" tag="b" type="primary">ALL QUOTES</el-text>
-          <el-button type="primary" plain class="mx-10" circle @click="() => router.push('/create-quote')"><el-icon>
+          <el-button
+            type="primary"
+            plain
+            class="mx-10"
+            circle
+            @click="() => router.push('/create-quote')"
+            ><el-icon>
               <Plus />
             </el-icon>
           </el-button>
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredQuotes" style="width: 100%" empty-text="No quote registered yet... 😢">
+        <el-table
+          :data="filteredQuotes"
+          style="width: 100%"
+          empty-text="No quote registered yet... 😢"
+        >
           <el-table-column v-if="!!userRef">
             <template #header>
               <el-icon>
@@ -19,8 +29,14 @@
               </el-icon>
             </template>
             <template #default="scope">
-              <el-switch @change="updateFavorite(scope.row)" v-model="scope.row.isFavorite" class="ml-2" inline-prompt
-                style="--el-switch-on-color: #13ce66" active-text="❤️❤️" />
+              <el-switch
+                @change="updateFavorite(scope.row)"
+                v-model="scope.row.isFavorite"
+                class="ml-2"
+                inline-prompt
+                style="--el-switch-on-color: #13ce66"
+                active-text="❤️❤️"
+              />
             </template>
           </el-table-column>
           <el-table-column label="Author" prop="author.name" width="200" sortable></el-table-column>
@@ -35,15 +51,26 @@
           <el-table-column label="Operations" width="100">
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
-              <el-button link type="danger" size="small"
-                @click="deleteQuote(scope.row.id, scope.row.authorId)">Delete</el-button>
+              <el-button
+                link
+                type="danger"
+                size="small"
+                @click="deleteQuote(scope.row.id, scope.row.authorId)"
+                >Delete</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
         <el-row justify="center" class="mt-20">
-          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
-            @size-change="handlePageSizeChange" :page-size="pageSize" :page-sizes="[5, 10, 20, 30, 40]"
-            layout="total, sizes, prev, pager, next" :total="quotes.length" />
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            @size-change="handlePageSizeChange"
+            :page-size="pageSize"
+            :page-sizes="[5, 10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next"
+            :total="quotes.length"
+          />
         </el-row>
       </el-card>
     </div>
@@ -75,13 +102,13 @@ const fetchQuotes = async () => {
   try {
     const db = getFirestore()
 
-    const authorsSnapshot = await getDocs(collection(db, 'authors'));
+    const authorsSnapshot = await getDocs(collection(db, 'authors'))
 
     authorsSnapshot.forEach(async (authorDoc) => {
-      const authorId = authorDoc.id;
+      const authorId = authorDoc.id
 
-      const quotesCollection = collection(db, `authors/${authorId}/quotes`);
-      const quotesSnapshot = await getDocs(quotesCollection);
+      const quotesCollection = collection(db, `authors/${authorId}/quotes`)
+      const quotesSnapshot = await getDocs(quotesCollection)
 
       // Iterate through each quote document and push it to the quotes array
       quotesSnapshot.forEach((quoteDoc) => {
@@ -89,20 +116,19 @@ const fetchQuotes = async () => {
           id: quoteDoc.id,
           ...quoteDoc.data(),
           author: {
-            ...authorDoc.data(),
+            ...authorDoc.data()
           },
           authorId,
           isFavorite: quoteDoc.data().favorite.includes(userRef.value.uid)
-        });
-      });
+        })
+      })
 
       quotes.value.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt)
       })
 
       updateFilteredQuotes()
-    });
-
+    })
   } catch (error) {
     console.error('Error fetching quotes: ', error)
     ElMessage({
@@ -135,7 +161,8 @@ const deleteQuote = async (quoteId, authorId) => {
   store.commit('setLoading', true)
 
   try {
-    if(quoteId === undefined || authorId === undefined) throw new Error('quoteId and authorId are required')
+    if (quoteId === undefined || authorId === undefined)
+      throw new Error('quoteId and authorId are required')
 
     ElMessageBox.confirm('This will permanently delete the quote. Continue?', 'Error', {
       confirmButtonText: 'DELETE',

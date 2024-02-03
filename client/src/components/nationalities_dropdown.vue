@@ -1,13 +1,24 @@
 <template>
-  <el-select v-model="selectedNationality" size="large" filterable default-first-option @change="emitSelectedNationality"
-    style="width: 100%">
-    <el-option style="color: brown" value="Unknown"><el-icon>
+  <el-select
+    v-model="selectedNationality"
+    size="large"
+    filterable
+    default-first-option
+    @change="emitSelectedNationality"
+    style="width: 100%"
+  >
+    <el-option style="color: brown" value="Unknown"
+      ><el-icon>
         <QuestionFilled />
       </el-icon>
       &nbsp; Unknown
     </el-option>
-    <el-option v-for="nationality in nationalities" :key="nationality" :label="nationality"
-      :value="nationality"></el-option>
+    <el-option
+      v-for="nationality in nationalities"
+      :key="nationality"
+      :label="nationality"
+      :value="nationality"
+    ></el-option>
   </el-select>
 </template>
 
@@ -41,9 +52,12 @@ const emitSelectedNationality = () => {
   }
 }
 
-watch(() => props.nationality, (newValue) => {
-  selectedNationality.value = newValue
-})
+watch(
+  () => props.nationality,
+  (newValue) => {
+    selectedNationality.value = newValue
+  }
+)
 
 onMounted(() => {
   fetchNationalities()

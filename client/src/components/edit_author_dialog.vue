@@ -1,19 +1,39 @@
 <template>
   <div>
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
-    <el-dialog @open="openDialog" title="Edit Author" v-model="dialogVisible" width="80vw" style="z-index: 100 !important"
-      :append-to-body="true" @close="setInitialData">
+    <el-dialog
+      @open="openDialog"
+      title="Edit Author"
+      v-model="dialogVisible"
+      width="80vw"
+      style="z-index: 100 !important"
+      :append-to-body="true"
+      @close="setInitialData"
+    >
       <el-form :model="authorData" :rules="authorRules" ref="authorForm" label-position="top">
         <el-form-item prop="name" label="Author Name" class="form-item">
-          <el-input v-model="authorData.name" placeholder="Enter author name" size="large"></el-input>
+          <el-input
+            v-model="authorData.name"
+            placeholder="Enter author name"
+            size="large"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="birthDate" label="Birth Date" class="form-item">
-          <el-date-picker v-model="authorData.birthDate" type="year" placeholder="Pick a year" size="large"
-            style="width: 100%" />
+          <el-date-picker
+            v-model="authorData.birthDate"
+            type="year"
+            placeholder="Pick a year"
+            size="large"
+            style="width: 100%"
+          />
         </el-form-item>
         <el-form-item prop="nationality" label="Country of origin" class="form-item">
-          <nationalities-dropdown :nationality="authorData.nationality" @selected-nationality="(selectedNationality) => (authorData.nationality = selectedNationality)
-            " />
+          <nationalities-dropdown
+            :nationality="authorData.nationality"
+            @selected-nationality="
+              (selectedNationality) => (authorData.nationality = selectedNationality)
+            "
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -94,7 +114,7 @@ const setInitialData = () => {
 }
 
 const openDialog = () => {
-  setInitialData() 
+  setInitialData()
 }
 
 onMounted(() => {

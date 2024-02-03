@@ -9,21 +9,41 @@
       </el-icon>
     </el-divider>
     <el-row justify="center" v-if="!userRef">
-      <el-alert title="Not logged in" description="You have to log in in order to view favorite quotes." type="error"
-        show-icon />
+      <el-alert
+        title="Not logged in"
+        description="You have to log in in order to view favorite quotes."
+        type="error"
+        show-icon
+      />
       <el-link class="mt-20" v-if="!userRef" type="danger" href="/login">
-        go to login &nbsp; <el-icon>
+        go to login &nbsp;
+        <el-icon>
           <Right />
         </el-icon>
       </el-link>
     </el-row>
-    <el-table v-if="userRef" :data="quotes" style="width: 100%" :flexible="true" empty-text="Go on and save the world!">
-      <el-table-column label="Author Name" prop="author.name" sortable width="150"></el-table-column>
+    <el-table
+      v-if="userRef"
+      :data="quotes"
+      style="width: 100%"
+      :flexible="true"
+      empty-text="Go on and save the world!"
+    >
+      <el-table-column
+        label="Author Name"
+        prop="author.name"
+        sortable
+        width="150"
+      ></el-table-column>
       <el-table-column label="Quote Body" prop="body"></el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default="scope">
-          <el-popconfirm title="Remove from favorites?" width="250" confirm-button-type="danger"
-            @confirm="removeFavoriteQuote(scope.row)">
+          <el-popconfirm
+            title="Remove from favorites?"
+            width="250"
+            confirm-button-type="danger"
+            @confirm="removeFavoriteQuote(scope.row)"
+          >
             <template #reference>
               <el-button link type="danger" size="small">Remove</el-button>
             </template>
@@ -55,14 +75,13 @@ const fetchQuotes = async () => {
   try {
     const db = getFirestore()
 
-    const authorsSnapshot = await getDocs(collection(db, 'authors'));
+    const authorsSnapshot = await getDocs(collection(db, 'authors'))
 
     authorsSnapshot.forEach(async (authorDoc) => {
-      const authorId = authorDoc.id;
+      const authorId = authorDoc.id
 
-      const quotesCollection = collection(db, `authors/${authorId}/quotes`);
-      const quotesSnapshot = await getDocs(quotesCollection);
-
+      const quotesCollection = collection(db, `authors/${authorId}/quotes`)
+      const quotesSnapshot = await getDocs(quotesCollection)
 
       // Iterate through each quote document and push it to the quotes array
       quotesSnapshot.forEach((quoteDoc) => {
@@ -71,14 +90,13 @@ const fetchQuotes = async () => {
             id: quoteDoc.id,
             ...quoteDoc.data(),
             author: {
-              ...authorDoc.data(),
+              ...authorDoc.data()
             },
             authorId
-          });
+          })
         }
-      });
-    });
-
+      })
+    })
   } catch (error) {
     console.error('Error fetching quotes: ', error)
     ElMessage({

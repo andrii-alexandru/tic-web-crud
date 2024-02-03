@@ -2,19 +2,39 @@
   <div>
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
 
-    <el-dialog @open="openDialog" title="Edit Quote" v-model="dialogVisible" width="80vw" style="z-index: 100 !important"
-      :append-to-body="true">
+    <el-dialog
+      @open="openDialog"
+      title="Edit Quote"
+      v-model="dialogVisible"
+      width="80vw"
+      style="z-index: 100 !important"
+      :append-to-body="true"
+    >
       <el-form :model="quoteData" :rules="quoteRules" ref="quoteForm" label-position="top">
         <el-form-item prop="authorId" label="Author">
           <el-select v-model="quoteData.authorId" placeholder="Select Author" size="large" disabled>
-            <el-option v-for="author in authors" :key="author.id" :label="author.name" :value="author.id"></el-option>
+            <el-option
+              v-for="author in authors"
+              :key="author.id"
+              :label="author.name"
+              :value="author.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="body" label="Quote Body" label-width="150px">
-          <el-input v-model="quoteData.body" type="textarea" placeholder="Enter the quote..." size="large"></el-input>
+          <el-input
+            v-model="quoteData.body"
+            type="textarea"
+            placeholder="Enter the quote..."
+            size="large"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="bookReference" label="Book or Reference" label-width="150px">
-          <el-input v-model="quoteData.bookReference" placeholder="Book or Reference" size="large"></el-input>
+          <el-input
+            v-model="quoteData.bookReference"
+            placeholder="Book or Reference"
+            size="large"
+          ></el-input>
         </el-form-item>
         <el-form-item label="Significant">
           <el-switch v-model="quoteData.significant" size="large" />
@@ -22,10 +42,14 @@
       </el-form>
 
       <template v-if="quoteData.userEmail">
-        <el-divider content-position="right"><el-text size="small" type="primary">created by
+        <el-divider content-position="right"
+          ><el-text size="small" type="primary"
+            >created by
             <el-text size="small" type="primary" tag="ins">{{
               quoteData.userEmail
-            }}</el-text></el-text></el-divider>
+            }}</el-text></el-text
+          ></el-divider
+        >
       </template>
       <template #footer>
         <el-button @click="dialogVisible = false" size="large">Cancel</el-button>
@@ -86,15 +110,11 @@ const editQuote = async () => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        const response = await axios.put(
-          `http://localhost:3000/api/edit-quote`,
-          quoteData.value,
-          {
-            headers: {
-              Authorization: idToken
-            }
+        const response = await axios.put(`http://localhost:3000/api/edit-quote`, quoteData.value, {
+          headers: {
+            Authorization: idToken
           }
-        )
+        })
         if (response.status === 200) {
           ElMessage({
             message: 'Quote edited successfully.',

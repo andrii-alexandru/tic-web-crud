@@ -7,41 +7,73 @@
 
       <profile-picture v-if="!disabledRef"></profile-picture>
 
-      <br>
-      <br>
+      <br />
+      <br />
 
       <el-link v-if="disabledRef" type="primary" href="/login">
-        go to login &nbsp; <el-icon>
+        go to login &nbsp;
+        <el-icon>
           <Right />
         </el-icon>
       </el-link>
 
-      <el-form ref="accountForm" :model="changePasswordData" :rules="accountRules" label-position="top"
-        :disabled="disabledRef" class="mt-5">
+      <el-form
+        ref="accountForm"
+        :model="changePasswordData"
+        :rules="accountRules"
+        label-position="top"
+        :disabled="disabledRef"
+        class="mt-5"
+      >
         <el-form-item prop="email" label="Email" label-width="150px">
-          <el-input v-model="userEmail" prefix-icon="message" placeholder="Email" size="large"
-            disabled></el-input>
+          <el-input
+            v-model="userEmail"
+            prefix-icon="message"
+            placeholder="Email"
+            size="large"
+            disabled
+          ></el-input>
         </el-form-item>
-        
-        <br/>
+
+        <br />
         <el-text size="large" tag="b">CHANGE PASSWORD SECTION</el-text>
-        
+
         <el-form-item prop="oldPassword" label="Old Password" label-width="150px">
-          <el-input type="password" v-model="changePasswordData.oldPassword" prefix-icon="lock" placeholder="Old Password"
-            size="large" show-password></el-input>
+          <el-input
+            type="password"
+            v-model="changePasswordData.oldPassword"
+            prefix-icon="lock"
+            placeholder="Old Password"
+            size="large"
+            show-password
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password" label="Password" label-width="150px">
-          <el-input type="password" v-model="changePasswordData.password" prefix-icon="lock" placeholder="Password"
-            size="large" show-password></el-input>
+          <el-input
+            type="password"
+            v-model="changePasswordData.password"
+            prefix-icon="lock"
+            placeholder="Password"
+            size="large"
+            show-password
+          ></el-input>
         </el-form-item>
         <el-form-item prop="checkPassword" label="Confirm Password" label-width="150px">
-          <el-input type="password" v-model="changePasswordData.checkPassword" prefix-icon="lock"
-            placeholder="Confirm Password" size="large" show-password></el-input>
+          <el-input
+            type="password"
+            v-model="changePasswordData.checkPassword"
+            prefix-icon="lock"
+            placeholder="Confirm Password"
+            size="large"
+            show-password
+          ></el-input>
         </el-form-item>
 
         <el-row justify="center">
           <el-form-item>
-            <el-button type="info" class="login-button" @click="editAccount" size="large">change password</el-button>
+            <el-button type="info" class="login-button" @click="editAccount" size="large"
+              >change password</el-button
+            >
           </el-form-item>
         </el-row>
       </el-form>
@@ -51,7 +83,13 @@
 
 <script setup>
 import DefaultLayout from '../components/default_layout.vue'
-import { getAuth, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
+import {
+  getAuth,
+  onAuthStateChanged,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider
+} from 'firebase/auth'
 import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import ProfilePicture from '../components/profile_picture.vue'
@@ -123,17 +161,20 @@ const editAccount = async () => {
         confirmButtonText: '😢'
       })
       return
-    }
-    finally {
+    } finally {
       store.commit('setLoading', false)
     }
 
     try {
       if (!password || password === changePasswordData.value.oldPassword) {
-        ElMessageBox.alert('Password not updated. The old and new passwords are the same!', 'Info', {
-          type: 'info',
-          confirmButtonText: 'OK'
-        })
+        ElMessageBox.alert(
+          'Password not updated. The old and new passwords are the same!',
+          'Info',
+          {
+            type: 'info',
+            confirmButtonText: 'OK'
+          }
+        )
         return
       }
 
@@ -145,14 +186,12 @@ const editAccount = async () => {
         type: 'success',
         confirmButtonText: 'OK'
       })
-
     } catch (error) {
       ElMessageBox.alert('Failed to update account information. ' + error.message, 'Error', {
         type: 'error',
         confirmButtonText: '😢'
       })
-    }
-    finally {
+    } finally {
       store.commit('setLoading', false)
     }
   })

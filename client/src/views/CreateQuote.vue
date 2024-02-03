@@ -9,11 +9,27 @@
         </el-page-header>
 
         <el-divider border-style="none"></el-divider>
-        <el-form ref="quoteForm" :model="quoteData" :rules="quoteRules" label-position="top" class="quote-form">
+        <el-form
+          ref="quoteForm"
+          :model="quoteData"
+          :rules="quoteRules"
+          label-position="top"
+          class="quote-form"
+        >
           <el-form-item prop="authorId" label="Author">
             <el-space fill>
-              <el-select v-model="quoteData.authorId" placeholder="Select Author" size="large" filterable>
-                <el-option v-for="author in authors" :key="author.id" :label="author.name" :value="author.id"></el-option>
+              <el-select
+                v-model="quoteData.authorId"
+                placeholder="Select Author"
+                size="large"
+                filterable
+              >
+                <el-option
+                  v-for="author in authors"
+                  :key="author.id"
+                  :label="author.name"
+                  :value="author.id"
+                ></el-option>
               </el-select>
               <el-alert type="info" show-icon :closable="false">
                 <p>The author cannot be changed afterwards!</p>
@@ -21,10 +37,19 @@
             </el-space>
           </el-form-item>
           <el-form-item prop="body" label="Quote Body" label-width="150px">
-            <el-input v-model="quoteData.body" type="textarea" placeholder="Enter the quote..." size="large"></el-input>
+            <el-input
+              v-model="quoteData.body"
+              type="textarea"
+              placeholder="Enter the quote..."
+              size="large"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="bookReference" label="Book or Reference" label-width="150px">
-            <el-input v-model="quoteData.bookReference" placeholder="Book or Reference" size="large"></el-input>
+            <el-input
+              v-model="quoteData.bookReference"
+              placeholder="Book or Reference"
+              size="large"
+            ></el-input>
           </el-form-item>
           <el-form-item label="Significant">
             <el-switch v-model="quoteData.significant" />
@@ -34,8 +59,14 @@
 
           <el-row justify="center">
             <el-form-item>
-              <el-button type="primary" class="create-button" @click="createQuote" size="large" round>Create
-                Quote</el-button>
+              <el-button
+                type="primary"
+                class="create-button"
+                @click="createQuote"
+                size="large"
+                round
+                >Create Quote</el-button
+              >
             </el-form-item>
           </el-row>
         </el-form>
