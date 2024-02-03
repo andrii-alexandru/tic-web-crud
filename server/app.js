@@ -24,8 +24,8 @@ app.get("/api", (req, res) => {
   res.send("Hello World!");
 });
 
-const quoteRoutes = createQuoteRoute(admin);
-app.use("/api", quoteRoutes);
-
 const authorRoutes = createAuthorRoute(admin);
 app.use("/api", authorRoutes);
+
+const quoteRoutes = createQuoteRoute(admin);
+app.use("/api", quoteRoutes);

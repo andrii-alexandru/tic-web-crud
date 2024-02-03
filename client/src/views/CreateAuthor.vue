@@ -34,7 +34,7 @@
               </el-form-item>
             </el-col>
             <el-col :xs="24" :md="12">
-              <el-form-item prop="nationality" label="Nationality" label-width="150px">
+              <el-form-item prop="nationality" label="Country of origin" label-width="150px">
                 <nationalities-dropdown
                   @selected-nationality="
                     (selectedNationality) => (authorData.nationality = selectedNationality)
@@ -111,7 +111,7 @@ const createAuthor = async () => {
         if (idToken === null) return
 
         const response = await axios.post(
-          'https://quotes.andrii.ro/api/create-author',
+          'http://localhost:3000/api/create-author',
           authorData.value,
           {
             headers: {

@@ -25,7 +25,7 @@
             style="width: 100%"
           />
         </el-form-item>
-        <el-form-item prop="nationality" label="Nationality" class="form-item">
+        <el-form-item prop="nationality" label="Country of origin" class="form-item">
           <nationalities-dropdown
             :nationality="authorData.nationality"
             @selected-nationality="
@@ -80,7 +80,7 @@ const editQuote = async () => {
         if (idToken === null) return
 
         const response = await axios.put(
-          `https://quotes.andrii.ro/api/edit-author/${authorData.value.id}`,
+          `http://localhost:3000/api/edit-author/${authorData.value.id}`,
           authorData.value,
           {
             headers: {

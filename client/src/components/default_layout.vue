@@ -1,5 +1,5 @@
 <template>
-  <el-container class="layout-container-demo" v-loading="loading">
+  <el-container class="layout-container-demo">
     <el-drawer v-model="aside_visible" :show-close="true" direction="ltr" size="auto">
       <template #header>
         <div>
@@ -80,6 +80,7 @@
         </el-scrollbar>
       </el-aside>
     </el-drawer>
+    
     <el-header>
       <el-row justify="space-between" align="middle" style="height: 100%">
         <el-button type="primary" plain style="margin-left: 16px" @click="aside_visible = true" round>
@@ -94,7 +95,7 @@
       </el-row>
     </el-header>
 
-    <el-main class="mt-20">
+    <el-main class="mt-20" v-loading="loading">
       <slot></slot>
     </el-main>
   </el-container>
@@ -145,7 +146,7 @@ const generateRandomAuthors = function () {
       if (idToken === null) return
 
       const response = await axios.post(
-        'https://quotes.andrii.ro/api/generate-random-authors',
+        'http://localhost:3000/api/generate-random-authors',
         null,
         {
           headers: {
@@ -189,7 +190,7 @@ const generateRandomQuotes = function () {
       if (idToken === null) return
 
       const response = await axios.post(
-        'https://quotes.andrii.ro/api/generate-random-quotes',
+        'http://localhost:3000/api/generate-random-quotes',
         null,
         {
           headers: {

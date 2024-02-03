@@ -4,30 +4,26 @@
       <el-text size="large" tag="b" type="primary">FAVORITES</el-text>
     </el-row>
     <el-divider>
-      <el-icon><StarFilled /></el-icon>
+      <el-icon>
+        <StarFilled />
+      </el-icon>
     </el-divider>
     <el-row justify="center" v-if="!userRef">
-      <el-alert
-        title="Not logged in"
-        description="You have to log in in order to view favorite quotes."
-        type="error"
-        show-icon
-      />
+      <el-alert title="Not logged in" description="You have to log in in order to view favorite quotes." type="error"
+        show-icon />
       <el-link class="mt-20" v-if="!userRef" type="danger" href="/login">
-        go to login &nbsp; <el-icon><Right /></el-icon>
+        go to login &nbsp; <el-icon>
+          <Right />
+        </el-icon>
       </el-link>
     </el-row>
-    <el-table v-if="userRef" :data="quotes" style="width: 100%" v-loading="loading" :flexible="true">
-      <el-table-column label="Author Name" prop="authorName" sortable width="150"></el-table-column>
+    <el-table v-if="userRef" :data="quotes" style="width: 100%" :flexible="true" empty-text="Go on and save the world!">
+      <el-table-column label="Author Name" prop="author.name" sortable width="150"></el-table-column>
       <el-table-column label="Quote Body" prop="body"></el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default="scope">
-          <el-popconfirm
-            title="Remove from favorites?"
-            width="250"
-            confirm-button-type="danger"
-            @confirm="removeFavoriteQuote(scope.row.id)"
-          >
+          <el-popconfirm title="Remove from favorites?" width="250" confirm-button-type="danger"
+            @confirm="removeFavoriteQuote(scope.row)">
             <template #reference>
               <el-button link type="danger" size="small">Remove</el-button>
             </template>
@@ -46,48 +42,67 @@ import { getFirestore, collection, getDocs, query, orderBy } from 'firebase/fire
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
+import { useStore } from 'vuex'
 
 const userRef = ref(null)
 const quotes = ref([])
-const loading = ref(true)
+const store = useStore()
 
 const fetchQuotes = async () => {
+  store.commit('setLoading', true)
+  quotes.value = []
+
   try {
     const db = getFirestore()
-    const sortedQuery = query(collection(db, 'quotes'), orderBy('createdAt', 'desc'))
-    const querySnapshot = await getDocs(sortedQuery)
 
-    quotes.value = querySnapshot.docs.map((doc) => {
-      return { ...doc.data(), id: doc.id }
-    })
+    const authorsSnapshot = await getDocs(collection(db, 'authors'));
 
-    //filter qutoes
-    quotes.value = quotes.value.filter((quote) => {
-      const userId = userRef.value?.uid || null
+    authorsSnapshot.forEach(async (authorDoc) => {
+      const authorId = authorDoc.id;
 
-      if (Array.isArray(quote.favorite) && quote.favorite.length > 0) {
-        return quote.favorite.includes(userId)
-      }
+      const quotesCollection = collection(db, `authors/${authorId}/quotes`);
+      const quotesSnapshot = await getDocs(quotesCollection);
 
-      return false
-    })
 
-    loading.value = false
+      // Iterate through each quote document and push it to the quotes array
+      quotesSnapshot.forEach((quoteDoc) => {
+        if (quoteDoc.data().favorite.includes(userRef.value.uid)) {
+          quotes.value.push({
+            id: quoteDoc.id,
+            ...quoteDoc.data(),
+            author: {
+              ...authorDoc.data(),
+            },
+            authorId
+          });
+        }
+      });
+    });
+
   } catch (error) {
     console.error('Error fetching quotes: ', error)
+    ElMessage({
+      type: 'error',
+      message: 'There was an error fetching the quotes.'
+    })
+  } finally {
+    store.commit('setLoading', false)
   }
 }
 
-const removeFavoriteQuote = async (quoteId) => {
-  loading.value = true
-  
+const removeFavoriteQuote = async (row) => {
+  store.commit('setLoading', true)
   try {
     const idToken = await getFirebaseIdToken()
     if (idToken === null) return
 
     const response = await axios.put(
-      `https://quotes.andrii.ro/api/update-favorite/${quoteId}`,
-      {},
+      `http://localhost:3000/api/update-favorite`,
+      {
+        quoteId: row.id,
+        authorId: row.authorId,
+        isFavorite: row.isFavorite
+      },
       {
         headers: {
           Authorization: idToken
@@ -106,9 +121,9 @@ const removeFavoriteQuote = async (quoteId) => {
     await fetchQuotes()
   } catch (error) {
     console.error('Error removing favorite quote: ', error)
+  } finally {
+    store.commit('setLoading', false)
   }
-
-  loading.value = false
 }
 
 onMounted(() => {

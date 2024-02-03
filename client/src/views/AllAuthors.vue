@@ -15,10 +15,10 @@
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredAuthors" style="width: 100%" empty-text="No author registered">
+        <el-table :data="filteredAuthors" style="width: 100%" empty-text="No author registered yet... 😢">
           <el-table-column label="Author Name" prop="name" sortable></el-table-column>
           <el-table-column label="Birth Date" prop="birthDate"></el-table-column>
-          <el-table-column label="Nationality" prop="nationality"></el-table-column>
+          <el-table-column label="Country of origin" prop="nationality"></el-table-column>
           <el-table-column label="Operations" width="120">
             <template #default="scope">
               <edit-author-dialog
@@ -119,7 +119,7 @@ const deleteQuote = async (authorId) => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        await axios.delete(`https://quotes.andrii.ro/api/delete-author/${authorId}`, {
+        await axios.delete(`http://localhost:3000/api/delete-author/${authorId}`, {
           headers: {
             Authorization: idToken
           }

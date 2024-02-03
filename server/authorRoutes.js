@@ -9,7 +9,6 @@ const createAuthorRoute = (admin) => {
   const router = express.Router();
   const authorsCollection = admin.firestore().collection("authors");
 
-  // Endpoint for creating a author
   router.post("/create-author", authenticateUser, async (req, res) => {
     try {
       const authorData = req.body;
@@ -20,7 +19,7 @@ const createAuthorRoute = (admin) => {
         new Date(authorData.birthDate)
       );
 
-      await authorsCollection.add({
+      const authorRef = await authorsCollection.add({
         ...authorData,
         userId,
         userEmail,

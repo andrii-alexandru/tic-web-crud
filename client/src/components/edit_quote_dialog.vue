@@ -2,55 +2,25 @@
   <div>
     <el-button link type="primary" size="small" @click="dialogVisible = true">Edit</el-button>
 
-    <el-dialog
-      title="Edit Quote"
-      v-model="dialogVisible"
-      width="80vw"
-      style="z-index: 100 !important"
-      :append-to-body="true"
-    >
+    <el-dialog title="Edit Quote" v-model="dialogVisible" width="80vw" style="z-index: 100 !important"
+      :append-to-body="true">
       <el-form :model="quoteData" :rules="quoteRules" ref="quoteForm" label-position="top">
-        <el-form-item prop="author" label="Author">
-          <el-select
-            v-model="quoteData.author"
-            placeholder="Select Author"
-            size="large"
-            @change="updateAuthorName"
-          >
-            <el-option
-              v-for="author in authors"
-              :key="author.id"
-              :label="author.name"
-              :value="author.id"
-            ></el-option>
+        <el-form-item prop="authorId" label="Author">
+          <el-select v-model="quoteData.authorId" placeholder="Select Author" size="large">
+            <el-option v-for="author in authors" :key="author.id" :label="author.name" :value="author.id"></el-option>
           </el-select>
           &nbsp;&nbsp; &nbsp;&nbsp;
-          <add-author-dialog
-            v-if="authors.length > 0"
-            :quoteData="quoteData"
-            :authors="authors"
-            :fetchAuthors="fetchAuthors"
-            @authorAdded="
-              () => {
-                fetchAuthors()
-              }
-            "
-          />
+          <add-author-dialog v-if="authors.length > 0" :quoteData="quoteData" :authors="authors"
+            :fetchAuthors="fetchAuthors" @authorAdded="() => {
+              fetchAuthors()
+            }
+              " />
         </el-form-item>
         <el-form-item prop="body" label="Quote Body" label-width="150px">
-          <el-input
-            v-model="quoteData.body"
-            type="textarea"
-            placeholder="Enter the quote..."
-            size="large"
-          ></el-input>
+          <el-input v-model="quoteData.body" type="textarea" placeholder="Enter the quote..." size="large"></el-input>
         </el-form-item>
         <el-form-item prop="bookReference" label="Book or Reference" label-width="150px">
-          <el-input
-            v-model="quoteData.bookReference"
-            placeholder="Book or Reference"
-            size="large"
-          ></el-input>
+          <el-input v-model="quoteData.bookReference" placeholder="Book or Reference" size="large"></el-input>
         </el-form-item>
         <el-form-item label="Significant">
           <el-switch v-model="quoteData.significant" size="large" />
@@ -58,14 +28,10 @@
       </el-form>
 
       <template v-if="quoteData.userEmail">
-        <el-divider content-position="right"
-          ><el-text size="small" type="primary"
-            >created by
+        <el-divider content-position="right"><el-text size="small" type="primary">created by
             <el-text size="small" type="primary" tag="ins">{{
               quoteData.userEmail
-            }}</el-text></el-text
-          ></el-divider
-        >
+            }}</el-text></el-text></el-divider>
       </template>
       <template #footer>
         <el-button @click="dialogVisible = false" size="large">Cancel</el-button>
@@ -77,7 +43,6 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 import AddAuthorDialog from './add_author_dialog.vue'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage } from 'element-plus'
@@ -95,8 +60,7 @@ const quoteForm = ref(null)
 
 const quoteData = ref({
   id: '',
-  author: '',
-  authorName: '',
+  authorId: '',
   body: '',
   bookReference: '',
   significant: false,
@@ -104,7 +68,7 @@ const quoteData = ref({
 })
 
 const quoteRules = {
-  author: [{ required: true, message: 'Please select the author', trigger: 'blur' }],
+  authorId: [{ required: true, message: 'Please select the author', trigger: 'blur' }],
   body: [{ required: true, message: 'Please enter the quote body', trigger: 'blur' }]
 }
 
@@ -130,7 +94,7 @@ const editQuote = async () => {
         if (idToken === null) return
 
         const response = await axios.put(
-          `https://quotes.andrii.ro/api/edit-quote/${quoteData.value.id}`,
+          `http://localhost:3000/api/edit-quote`,
           quoteData.value,
           {
             headers: {
@@ -161,15 +125,19 @@ const editQuote = async () => {
   })
 }
 
-const updateAuthorName = () => {
-  const author = authors.value.find((author) => author.id === quoteData.value.author)
-  quoteData.value.authorName = author.name
-}
-
 onMounted(() => {
   fetchAuthors()
 
   //create a copy of the quote prop to avoid mutating it directly
-  quoteData.value = JSON.parse(JSON.stringify(quoteProp.quote))
+  let quotePropJson = JSON.parse(JSON.stringify(quoteProp.quote))
+
+  quoteData.value = {
+    id: quotePropJson.id,
+    authorId: quotePropJson.author.id,
+    body: quotePropJson.body,
+    bookReference: quotePropJson.bookReference,
+    significant: quotePropJson.significant,
+    userEmail: quotePropJson.userEmail
+  }
 })
 </script>

@@ -4,61 +4,46 @@
       <el-card shadow="always" class="quote-list-card">
         <el-row>
           <el-text size="large" tag="b" type="primary">ALL QUOTES</el-text>
-          <el-button
-            type="primary"
-            plain
-            class="mx-10"
-            circle
-            @click="() => router.push('/create-quote')"
-            ><el-icon><Plus /></el-icon>
+          <el-button type="primary" plain class="mx-10" circle @click="() => router.push('/create-quote')"><el-icon>
+              <Plus />
+            </el-icon>
           </el-button>
         </el-row>
         <el-divider border-style="none"></el-divider>
 
-        <el-table :data="filteredQuotes" style="width: 100%">
+        <el-table :data="filteredQuotes" style="width: 100%" empty-text="No quote registered yet... 😢">
           <el-table-column v-if="!!userRef">
             <template #header>
-              <el-icon><Management /></el-icon>
+              <el-icon>
+                <Management />
+              </el-icon>
             </template>
             <template #default="scope">
-              <el-switch
-                @change="updateFavorite(scope.row.id, scope.row.isFavorite)"
-                v-model="scope.row.isFavorite"
-                class="ml-2"
-                inline-prompt
-                style="--el-switch-on-color: #13ce66"
-                active-text="❤️❤️"
-              />
+              <el-switch @change="updateFavorite(scope.row)" v-model="scope.row.isFavorite" class="ml-2" inline-prompt
+                style="--el-switch-on-color: #13ce66" active-text="❤️❤️" />
             </template>
           </el-table-column>
-          <el-table-column label="Author" prop="author" sortable></el-table-column>
-          <el-table-column label="Quote Body" prop="body" width="600"></el-table-column>
-          <el-table-column label="Reference" prop="bookReference"></el-table-column>
-          <el-table-column label="Significant" prop="significant">
+          <el-table-column label="Author" prop="author.name" width="200" sortable></el-table-column>
+          <el-table-column label="Quote" prop="body" width="400"></el-table-column>
+          <el-table-column label="Ref." prop="bookReference" width="100"></el-table-column>
+          <el-table-column label="Significant" prop="significant" width="150">
             <template #default="scope">
               <el-tag v-if="scope.row.significant" type="success">Significant</el-tag>
               <span v-else></span>
             </template>
           </el-table-column>
-          <el-table-column label="Operations">
+          <el-table-column label="Operations" width="100">
             <template #default="scope">
               <edit-quote-dialog :quote="scope.row" @quote-edited="fetchQuotes"></edit-quote-dialog>
-              <el-button link type="danger" size="small" @click="deleteQuote(scope.row.id)"
-                >Delete</el-button
-              >
+              <el-button link type="danger" size="small"
+                @click="deleteQuote(scope.row.id, scope.row.author.id)">Delete</el-button>
             </template>
           </el-table-column>
         </el-table>
         <el-row justify="center" class="mt-20">
-          <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            @size-change="handlePageSizeChange"
-            :page-size="pageSize"
-            :page-sizes="[5, 10, 20, 30, 40]"
-            layout="total, sizes, prev, pager, next"
-            :total="quotes.length"
-          />
+          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
+            @size-change="handlePageSizeChange" :page-size="pageSize" :page-sizes="[5, 10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next" :total="quotes.length" />
         </el-row>
       </el-card>
     </div>
@@ -68,7 +53,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import DefaultLayout from '../components/default_layout.vue'
-import { getFirestore, doc, collection, getDocs, getDoc, query, orderBy } from 'firebase/firestore'
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import { getFirebaseIdToken } from '@/components/utils/authUtils'
 import axios from 'axios'
@@ -79,49 +64,51 @@ import { useStore } from 'vuex'
 
 const quotes = ref([])
 const filteredQuotes = ref([])
+const totalQuotes = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(5)
 const store = useStore()
 
 const fetchQuotes = async () => {
   store.commit('setLoading', true)
+  quotes.value = []
+
   try {
     const db = getFirestore()
-    const sortedQuery = query(collection(db, 'quotes'), orderBy('createdAt', 'desc'))
-    const querySnapshot = await getDocs(sortedQuery)
 
-    quotes.value = await Promise.all(
-      querySnapshot.docs.map(async (document) => {
-        const quoteData = { id: document.id, ...document.data() }
+    const authorsSnapshot = await getDocs(collection(db, 'authors'));
 
-        if (quoteData.author) {
-          const authorId = quoteData.author
+    authorsSnapshot.forEach(async (authorDoc) => {
+      const authorId = authorDoc.id;
 
-          const authorRef = doc(db, 'authors', authorId)
-          const authorDoc = await getDoc(authorRef)
+      const quotesCollection = collection(db, `authors/${authorId}/quotes`);
+      const quotesSnapshot = await getDocs(quotesCollection);
 
-          if (authorDoc.exists()) {
-            quoteData.author = authorDoc.data().name
-          } else {
-            quoteData.author = 'Unknown'
-          }
-        }
+      // Iterate through each quote document and push it to the quotes array
+      quotesSnapshot.forEach((quoteDoc) => {
+        quotes.value.push({
+          id: quoteDoc.id,
+          ...quoteDoc.data(),
+          author: {
+            ...authorDoc.data(),
+          },
+          authorId,
+          isFavorite: quoteDoc.data().favorite.includes(userRef.value.uid)
+        });
+      });
 
-        return quoteData
-      })
-    )
+      updateFilteredQuotes()
+    });
 
-    quotes.value.map((quote) => {
-      const userId = userRef.value?.uid || null
-      quote.isFavorite = quote.favorite ? quote.favorite.includes(userId) : false
-    })
-
-    updateFilteredQuotes()
   } catch (error) {
     console.error('Error fetching quotes: ', error)
+    ElMessage({
+      type: 'error',
+      message: 'There was an error fetching the quotes.'
+    })
+  } finally {
+    store.commit('setLoading', false)
   }
-
-  store.commit('setLoading', false)
 }
 
 const updateFilteredQuotes = () => {
@@ -141,8 +128,9 @@ const handlePageSizeChange = (size) => {
   updateFilteredQuotes()
 }
 
-const deleteQuote = async (quoteId) => {
+const deleteQuote = async (quoteId, authorId) => {
   store.commit('setLoading', true)
+
   try {
     ElMessageBox.confirm('This will permanently delete the quote. Continue?', 'Error', {
       confirmButtonText: 'DELETE',
@@ -153,7 +141,7 @@ const deleteQuote = async (quoteId) => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        await axios.delete(`https://quotes.andrii.ro/api/delete-quote/${quoteId}`, {
+        await axios.delete(`http://localhost:3000/api/delete-quote/${quoteId}/${authorId}`, {
           headers: {
             Authorization: idToken
           }
@@ -175,18 +163,24 @@ const deleteQuote = async (quoteId) => {
   } catch (error) {
     console.error('Error deleting quote: ', error)
   }
+
   store.commit('setLoading', false)
 }
 
-const updateFavorite = async (quoteId, isFavorite) => {
+const updateFavorite = async (row) => {
   store.commit('setLoading', true)
+
   try {
     const idToken = await getFirebaseIdToken()
     if (idToken === null) return
 
     const response = await axios.put(
-      `https://quotes.andrii.ro/api/update-favorite/${quoteId}`,
-      { isFavorite },
+      `http://localhost:3000/api/update-favorite`,
+      {
+        quoteId: row.id,
+        authorId: row.authorId,
+        isFavorite: row.isFavorite
+      },
       {
         headers: {
           Authorization: idToken
@@ -198,22 +192,28 @@ const updateFavorite = async (quoteId, isFavorite) => {
 
     ElNotification({
       title: 'Favorite updated',
-      message: isFavorite ? 'Added to favorites.' : 'Removed from favorites.',
+      message: row.isFavorite ? 'Added to favorites.' : 'Removed from favorites.',
       position: 'bottom-right'
     })
   } catch (error) {
     console.error('Error updating favorite: ', error)
+    row.isFavorite = !row.isFavorite
+    ElMessage({
+      type: 'error',
+      message: 'There was an error updating favorite: ' + error.message
+    })
   }
   store.commit('setLoading', false)
 }
 
 const userRef = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   onAuthStateChanged(getAuth(), (user) => {
     userRef.value = user
   })
-  fetchQuotes()
+
+  await fetchQuotes()
 })
 </script>
 
@@ -224,6 +224,7 @@ onMounted(() => {
   align-items: center;
   height: 100%;
 }
+
 .quote-list-container .quote-list-card {
   width: 80vw;
   padding: 2rem;
