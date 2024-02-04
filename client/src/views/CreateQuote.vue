@@ -110,7 +110,7 @@ const createQuote = async () => {
         if (idToken === null) return
 
         const response = await axios.post(
-          'http://localhost:3000/api/create-quote',
+          'https://quotes.andrii.ro/api/create-quote',
           quoteData.value,
           {
             headers: {

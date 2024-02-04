@@ -115,7 +115,7 @@ const removeFavoriteQuote = async (row) => {
     if (idToken === null) return
 
     const response = await axios.put(
-      `http://localhost:3000/api/update-favorite`,
+      `https://quotes.andrii.ro/api/update-favorite`,
       {
         quoteId: row.id,
         authorId: row.authorId,

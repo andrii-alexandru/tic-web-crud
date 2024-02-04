@@ -113,7 +113,7 @@ const createAuthor = async () => {
         if (idToken === null) return
 
         const response = await axios.post(
-          'http://localhost:3000/api/create-author',
+          'https://quotes.andrii.ro/api/create-author',
           authorData.value,
           {
             headers: {

@@ -110,7 +110,7 @@ const editQuote = async () => {
         const idToken = await getFirebaseIdToken()
         if (idToken === null) return
 
-        const response = await axios.put(`http://localhost:3000/api/edit-quote`, quoteData.value, {
+        const response = await axios.put(`https://quotes.andrii.ro/api/edit-quote`, quoteData.value, {
           headers: {
             Authorization: idToken
           }
